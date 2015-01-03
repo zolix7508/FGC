@@ -393,10 +393,6 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Games\mv\mvserver\mvserver.csproj">
-      <Project>{d7d0ba19-7296-421a-88d6-fa1e414a9894}</Project>
-      <Name>mvserver</Name>
-    </ProjectReference>
     <ProjectReference Include="..\AppServer\AppServer.csproj">
       <Project>{eca55cfc-82f6-44f1-a246-4d77690e6258}</Project>
       <Name>AppServer</Name>

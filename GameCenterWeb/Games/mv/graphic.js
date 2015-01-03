@@ -29,14 +29,44 @@ function Graphics() {
 
 	function getSzinkod (szinkod) {
 	    switch (szinkod) {
-	        case '1': return 'p';
-	        case '2': return 'k';
-	        case '3': return 'z';
-	        case '4': return 's';
+	        case 1: return 'p';
+	        case 2: return 'k';
+	        case 3: return 'z';
+	        case 4: return 's';
 	    }
 	}
 
-	self.drawBabuk = function(babuk, tileIdx) {
+	self.drawBabuk = function (babuk, tileIdx, players) {
+	    var jatekosok = [];
+	    babuk.forEach(function (babu, i) {
+	        var jatekos = players[babu.playerIdx];
+	        var n = jatekosok.indexOf(jatekos);
+	        if (n == -1) {
+	            $.merge(jatekosok, [jatekos, { babuk: [babu] }]);
+	        } else
+	            $.merge(jatekosok[n + 1].babuk, [babu]);
+	    });
+
+	    var u = 0, n = _2PI / jatekosok.length;
+	    var co = getTileCoords(tileIdx);
+	    var x0 = co.x - babuRp2, y0 = co.y - babuRp2;
+	    for (i = 0; i < jatekosok.length; i += 2) {
+	        var x = x0 + babuKorR * Math.cos(u);
+	        var y = y0 + babuKorR * Math.sin(u);
+	        var info = jatekosok[i + 1];
+	        var cls = 'babu_' + getSzinkod(jatekosok[i].Szinkod);
+	        info.babuk.forEach(function (babu) {
+	            var elem = $('[data-babu="' + babu.id + '"]', host);
+	            var isNew = !elem.length;
+	            if (isNew) elem = self.babuTemplate.clone().addClass(cls).attr('data-babu', babu.id);
+	            elem.css({ left: x, top: y }).find('.babu-szam').text(info.babuk.length > 1 ? info.babuk.length : '');
+	            if (isNew) host.append(elem);
+	        });
+	        u += Math.PI / 2;
+	    }
+	}
+
+	self.drawBabuk2 = function(babuk, tileIdx) {
 	    var jatekosok = [];
 	    babuk.forEach(function (babu, i) {
 	        var n = jatekosok.indexOf(babu.jatekos);
@@ -72,12 +102,12 @@ function Graphics() {
 	    self.drawBabuk(babuk, babu.tileIdx);
 	};
 	
-	self.putBabu = function (babu, idx) {
+	self.putBabu = function (babu, idx, players) {
 	    var babuk = getBabukOnTile(idx);
 	    babu.tileIdx = idx;
 	    var n = babuk.indexOf(babu);
 	    if (n==-1) babuk.push(babu);
-	    self.drawBabuk(babuk, idx);
+	    self.drawBabuk(babuk, idx, players);
 	};
 
 	self.moveBabu = function(babu, idx) {

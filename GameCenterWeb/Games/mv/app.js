@@ -213,7 +213,7 @@ function App() {
     }
 
     function getBabukOnTile(tileIdx, excludeBabu) {
-        return babuk.filter(function (babu) {
+        return self.mvParty.babuk.filter(function (babu) {
             return babu.tileIdx == tileIdx && babu != excludeBabu;
         });
     }
@@ -702,6 +702,10 @@ $(function () {
         }
         if (app.mvParty.tiles)
             $.each(app.mvParty.tiles, function (t, tile) { app.setTile(t, tile.tileKind) });
+
+        if (app.mvParty.babuk)
+            $.each(app.mvParty.babuk, function (b, babu) { if (babu.tileIdx >= 0) graphics.putBabu(babu, babu.tileIdx, app.mvParty.players) });
+
         app.updateBoard(app.mvParty);
         $('#ddSzin option').each(function (i, x) {
             $(this).addClass(graphics.getSzinClass(x.value));
