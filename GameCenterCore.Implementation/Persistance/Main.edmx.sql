@@ -1,9 +1,9 @@
 
 -- --------------------------------------------------
--- Entity Designer DDL Script for SQL Server 2005, 2008, and Azure
+-- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 12/14/2014 14:39:45
--- Generated from EDMX file: D:\doc\Forras\fgc\src\GameCenter\GameCenterCore.Implementation\Persistance\Main.edmx
+-- Date Created: 12/26/2014 14:12:50
+-- Generated from EDMX file: D:\doc\forras\fgc\fgc\src\GameCenter\GameCenterCore.Implementation\Persistance\Main.edmx
 -- --------------------------------------------------
 
 SET QUOTED_IDENTIFIER OFF;
@@ -17,11 +17,23 @@ GO
 -- Dropping existing FOREIGN KEY constraints
 -- --------------------------------------------------
 
-IF OBJECT_ID(N'[dbo].[fk_RoleId]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[webpages_UsersInRoles] DROP CONSTRAINT [fk_RoleId];
+IF OBJECT_ID(N'[dbo].[FK_webpages_UsersInRoles_webpages_Roles]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[webpages_UsersInRoles] DROP CONSTRAINT [FK_webpages_UsersInRoles_webpages_Roles];
 GO
-IF OBJECT_ID(N'[dbo].[fk_UserId]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[webpages_UsersInRoles] DROP CONSTRAINT [fk_UserId];
+IF OBJECT_ID(N'[dbo].[FK_webpages_UsersInRoles_Users]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[webpages_UsersInRoles] DROP CONSTRAINT [FK_webpages_UsersInRoles_Users];
+GO
+IF OBJECT_ID(N'[dbo].[FK_PartyPlayer]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Players] DROP CONSTRAINT [FK_PartyPlayer];
+GO
+IF OBJECT_ID(N'[dbo].[FK_PlayerUser]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Users] DROP CONSTRAINT [FK_PlayerUser];
+GO
+IF OBJECT_ID(N'[dbo].[FK_webpages_UsersInRoles1_webpages_Roles]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[webpages_UsersInRoles1] DROP CONSTRAINT [FK_webpages_UsersInRoles1_webpages_Roles];
+GO
+IF OBJECT_ID(N'[dbo].[FK_webpages_UsersInRoles1_User]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[webpages_UsersInRoles1] DROP CONSTRAINT [FK_webpages_UsersInRoles1_User];
 GO
 
 -- --------------------------------------------------
@@ -40,8 +52,17 @@ GO
 IF OBJECT_ID(N'[dbo].[webpages_Roles]', 'U') IS NOT NULL
     DROP TABLE [dbo].[webpages_Roles];
 GO
+IF OBJECT_ID(N'[dbo].[Parties]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Parties];
+GO
+IF OBJECT_ID(N'[dbo].[Players]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Players];
+GO
 IF OBJECT_ID(N'[dbo].[webpages_UsersInRoles]', 'U') IS NOT NULL
     DROP TABLE [dbo].[webpages_UsersInRoles];
+GO
+IF OBJECT_ID(N'[dbo].[webpages_UsersInRoles1]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[webpages_UsersInRoles1];
 GO
 
 -- --------------------------------------------------
@@ -52,7 +73,7 @@ GO
 CREATE TABLE [dbo].[Users] (
     [Id] int IDENTITY(1,1) NOT NULL,
     [UserName] nvarchar(56)  NOT NULL,
-    [Player_Id] bigint  NOT NULL
+    [Player_Id] uniqueidentifier  NOT NULL
 );
 GO
 
@@ -89,15 +110,16 @@ GO
 
 -- Creating table 'Parties'
 CREATE TABLE [dbo].[Parties] (
-    [Id] bigint IDENTITY(1,1) NOT NULL
+    [Id] uniqueidentifier  NOT NULL,
+    [StatusId] smallint  NOT NULL
 );
 GO
 
 -- Creating table 'Players'
 CREATE TABLE [dbo].[Players] (
-    [Id] bigint IDENTITY(1,1) NOT NULL,
+    [Id] uniqueidentifier  NOT NULL,
     [UserId] int  NOT NULL,
-    [PartyId] bigint  NOT NULL
+    [PartyUId] uniqueidentifier  NOT NULL
 );
 GO
 
@@ -158,13 +180,13 @@ GO
 -- Creating primary key on [webpages_UsersInRoles_Users_RoleId], [Users_Id] in table 'webpages_UsersInRoles'
 ALTER TABLE [dbo].[webpages_UsersInRoles]
 ADD CONSTRAINT [PK_webpages_UsersInRoles]
-    PRIMARY KEY NONCLUSTERED ([webpages_UsersInRoles_Users_RoleId], [Users_Id] ASC);
+    PRIMARY KEY CLUSTERED ([webpages_UsersInRoles_Users_RoleId], [Users_Id] ASC);
 GO
 
 -- Creating primary key on [webpages_UsersInRoles1_User_RoleId], [Users1_Id] in table 'webpages_UsersInRoles1'
 ALTER TABLE [dbo].[webpages_UsersInRoles1]
 ADD CONSTRAINT [PK_webpages_UsersInRoles1]
-    PRIMARY KEY NONCLUSTERED ([webpages_UsersInRoles1_User_RoleId], [Users1_Id] ASC);
+    PRIMARY KEY CLUSTERED ([webpages_UsersInRoles1_User_RoleId], [Users1_Id] ASC);
 GO
 
 -- --------------------------------------------------
@@ -187,6 +209,7 @@ ADD CONSTRAINT [FK_webpages_UsersInRoles_Users]
     REFERENCES [dbo].[Users]
         ([Id])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_webpages_UsersInRoles_Users'
 CREATE INDEX [IX_FK_webpages_UsersInRoles_Users]
@@ -194,18 +217,19 @@ ON [dbo].[webpages_UsersInRoles]
     ([Users_Id]);
 GO
 
--- Creating foreign key on [PartyId] in table 'Players'
+-- Creating foreign key on [PartyUId] in table 'Players'
 ALTER TABLE [dbo].[Players]
 ADD CONSTRAINT [FK_PartyPlayer]
-    FOREIGN KEY ([PartyId])
+    FOREIGN KEY ([PartyUId])
     REFERENCES [dbo].[Parties]
         ([Id])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_PartyPlayer'
 CREATE INDEX [IX_FK_PartyPlayer]
 ON [dbo].[Players]
-    ([PartyId]);
+    ([PartyUId]);
 GO
 
 -- Creating foreign key on [Player_Id] in table 'Users'
@@ -215,6 +239,7 @@ ADD CONSTRAINT [FK_PlayerUser]
     REFERENCES [dbo].[Players]
         ([Id])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_PlayerUser'
 CREATE INDEX [IX_FK_PlayerUser]
@@ -238,6 +263,7 @@ ADD CONSTRAINT [FK_webpages_UsersInRoles1_User]
     REFERENCES [dbo].[Users]
         ([Id])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_webpages_UsersInRoles1_User'
 CREATE INDEX [IX_FK_webpages_UsersInRoles1_User]

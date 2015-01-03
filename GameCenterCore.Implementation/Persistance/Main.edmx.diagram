@@ -5,16 +5,17 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="a1634665fea743beb043f9e8ba35554f" Name="Diagram1">
-        <EntityTypeShape EntityType="PersistanceModel.User" Width="1.5" PointX="3" PointY="0.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="PersistanceModel.UserDb" Width="1.5" PointX="3" PointY="0.875" IsExpanded="true" />
         <EntityTypeShape EntityType="PersistanceModel.webpages_Membership" Width="1.5" PointX="0.75" PointY="3.75" IsExpanded="true" />
         <EntityTypeShape EntityType="PersistanceModel.webpages_OAuthMembership" Width="1.5" PointX="2.75" PointY="3.75" IsExpanded="true" />
         <EntityTypeShape EntityType="PersistanceModel.webpages_Roles" Width="1.5" PointX="0.75" PointY="0.875" IsExpanded="true" />
         <AssociationConnector Association="PersistanceModel.webpages_UsersInRoles" ManuallyRouted="false" />
-        <EntityTypeShape EntityType="PersistanceModel.Party" Width="1.5" PointX="5.375" PointY="1.5" />
-        <EntityTypeShape EntityType="PersistanceModel.Player" Width="1.5" PointX="5.375" PointY="3.25" />
-        <AssociationConnector Association="PersistanceModel.PartyPlayer" />
-        <AssociationConnector Association="PersistanceModel.PlayerUser" />
         <AssociationConnector Association="PersistanceModel.webpages_UsersInRoles1" />
+        <EntityTypeShape EntityType="PersistanceModel.GameDb" Width="1.5" PointX="7.375" PointY="0.75" />
+        <EntityTypeShape EntityType="PersistanceModel.PartyDb" Width="1.5" PointX="5.375" PointY="4" />
+        <EntityTypeShape EntityType="PersistanceModel.PlayerDb" Width="1.5" PointX="5.25" PointY="0.875" />
+        <AssociationConnector Association="PersistanceModel.FK_PartyPlayer" />
+        <AssociationConnector Association="PersistanceModel.FK_Players_Users" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

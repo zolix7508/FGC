@@ -1,0 +1,33 @@
+﻿@using GameCenterWeb.Models
+@model PartyModel
+@{
+    ViewBag.Title = "Create Party";
+}
+
+<h2>Uj Party Letrehozasa</h2>
+@using (Html.BeginForm("Save","Party")) {
+    @Html.HiddenFor(m=>m.Id)
+    <span>Jatek: </span>@Html.DropDownList("GameId", new List<SelectListItem> { new SelectListItem { Value = "85A9EB34-60EC-405B-98C6-5611D998318A", Text = "Mamutvadaszat" } }, "- Valassz -")
+    <h3>Résztvevők</h3>
+    <table>
+        <tr>
+            <th></th>
+            <th>Nev</th>
+        </tr>
+        @if (Model.Players != null)
+        {
+            for (int i = 0; i < Model.Players.Count(); i++)
+            {
+                <tr>
+                    <td>
+                        @Html.CheckBoxFor(m => m.Players[i].Selected)
+                        @Html.HiddenFor(m=>m.Players[i].UserId)
+                        @Html.HiddenFor(m => m.Players[i].Id)
+                    </td>
+                    <td>@(Model.Players[i].Nick)</td>
+                </tr>
+            }
+        }
+    </table>
+    <input type="submit" value="Save" />
+}

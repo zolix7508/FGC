@@ -1,0 +1,29 @@
+﻿@using GameCenterCore.Contracts;
+@model IEnumerable<IParty>
+@{
+    ViewBag.Title = "Parties";
+}
+<h2>Partik</h2>
+<div>@Html.ActionLink("Uj Party", "Create", "Party")</div>
+<table>
+    <tr>
+        <th>Start</th>
+        <th>Game</th>
+        <th>Inditotta</th>
+        <th>Allapot</th>
+        <th></th>
+    </tr>
+    @if (Model != null)
+    {
+        foreach (var party in Model)
+        {
+            <tr>
+            <td></td>
+            <td>@party.GameId</td>
+            <td></td>
+            <td>@party.StatusId</td>
+            <td>@if (party.StatusId == PartyStatus.Created) { @Html.ActionLink("Csatlakozas", "Join", "Party", new { partyId = party.Id }, null)  } </td>
+            </tr>
+        }
+    }
+</table>

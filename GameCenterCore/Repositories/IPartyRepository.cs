@@ -9,5 +9,6 @@ namespace GameCenterCore.Repositories
 {
     public interface IPartyRepository : IRepository<IParty>
     {
+        IEnumerable<IUser> GetUsers(Guid guid);
     }
 }

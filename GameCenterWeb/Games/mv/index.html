@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+   <head>
+      <title>Javascript Turtle</title>
+      <!--<script type="text/javascript" src="jquery-1.6.4.min.js"></script>-->
+	<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+	<!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>-->
+      <link type="text/css" rel="stylesheet" href="turtle.css" />
+   </head>
+   <body>
+      <div id="wrap">
+         <div id="midcolumn">
+            <h4>Canvas</h4>
+            <canvas id="turtlecanvas" width="1200" height="1800"></canvas>
+            <canvas id="imagecanvas" width="1200" height="800" style="display:none"></canvas>
+            <h4>Command</h4>
+               <input type="text" id="command" />
+         </div> <!-- midcolumn -->
+      </div> <!-- wrap-->
+      <!--<script type="text/javascript" src="turtle.js"></script>-->
+	<script>
+	var x0 = y0 = 100;
+	function h6(deg) {
+		ctx.beginPath();
+		ctx.moveTo(x0 + 50, y0 );
+		for(var i=deg; i<=2*Math.PI; i+=deg) {
+			ctx.lineTo(x0 + 50*Math.cos(i), y0+50*Math.sin(i) );
+		}
+		ctx.stroke();
+	}
+
+	function h(n, x, y, dy, startsHoriz, addClosing) {
+		ctx.beginPath();
+		ctx.moveTo(x, y);
+		for (i=1; i<=n; i++) {
+
+		x+=dx;
+		if (startsHoriz && i==1) ctx.moveTo(x, y-dy ); else ctx.lineTo(x, y-dy );
+
+		x+=r;
+		ctx.lineTo(x, y-dy );
+
+		x+=dx;
+		ctx.lineTo(x, y );
+		
+		x+=r;
+		ctx.lineTo(x, y );
+		
+		}
+		if (startsHoriz || addClosing) ctx.lineTo(x+dx, y-dy);
+		ctx.stroke();
+
+	}
+
+
+	function newH6() {
+		right(120);
+		penup();
+		forward(100);
+		left(120);
+		forward(50);
+	}
+
+	var c = document.getElementById("turtlecanvas");
+	var ctx = c.getContext("2d");
+
+	var r=30;
+	var deg=Math.PI / 3;
+	var dx=r*Math.cos(deg), dy = r*Math.sin(deg);
+console.log(dx); console.log(dy);
+	var x=100, y=0;
+
+	h(4, x, y, -dy, true);
+
+	y+=dy<<1;
+	h(6, x, y, dy, false, false);
+	h(6, x, y, -dy, false, true);
+
+
+	for (var ii=1; ii<9; ii++) {
+		y+=dy<<1;
+		h(6, x, y, dy, false, true);
+		h(6, x, y, -dy, false, true);
+	}
+
+
+	y+=dy<<1;	
+	h(6, x, y, dy, true, true);
+
+	x+=2*dx+2*r;
+	h(5, x, y, -dy, false, false);
+
+	x+=dx+r;
+	y+=dy;
+	h(2, x, y, -dy, false, false);
+
+	x+=4*dx+7*r;
+	h(1, x, y, -dy, false, false);
+	</script>
+   </body>
+</html>

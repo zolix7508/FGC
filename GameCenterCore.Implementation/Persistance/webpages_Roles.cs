@@ -16,14 +16,14 @@ namespace GameCenterCore.Implementation.Persistance
     {
         public webpages_Roles()
         {
-            this.Users = new HashSet<User>();
-            this.Users1 = new HashSet<User>();
+            this.Users = new HashSet<UserDb>();
+            this.Users1 = new HashSet<UserDb>();
         }
     
         public int RoleId { get; set; }
         public string RoleName { get; set; }
     
-        public virtual ICollection<User> Users { get; set; }
-        public virtual ICollection<User> Users1 { get; set; }
+        public virtual ICollection<UserDb> Users { get; set; }
+        public virtual ICollection<UserDb> Users1 { get; set; }
     }
 }

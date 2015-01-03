@@ -1,11 +1,19 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameCenterCore", "GameCenterCore\GameCenterCore.csproj", "{D236F38A-A14E-43E5-A525-0EE9F91E2FBB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Games", "Games", "{A148E334-F197-4034-908C-5E0DC751523A}"
+	ProjectSection(SolutionItems) = preProject
+		GameCenterWeb\Games\mv\web.config = GameCenterWeb\Games\mv\web.config
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "X0", "X0", "{713A1598-3FD2-487E-B361-E94F253995C3}"
+	ProjectSection(SolutionItems) = preProject
+		TextFile1.txt = TextFile1.txt
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameCenterWeb", "GameCenterWeb\GameCenterWeb.csproj", "{B0E4AD9D-1267-477B-A1E0-BC5C6C6B70DB}"
 EndProject
@@ -26,6 +34,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppServer", "AppServer\AppServer.csproj", "{ECA55CFC-82F6-44F1-A246-4D77690E6258}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GCWeb", "GCWeb\GCWeb.csproj", "{9435E27E-F4F9-4B7D-91FE-C4596A44746F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MV", "MV", "{B34ED209-53FB-433E-A981-D4BA71877E63}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mvserver", "..\Games\mv\mvserver\mvserver.csproj", "{D7D0BA19-7296-421A-88D6-FA1E414A9894}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,11 +69,17 @@ Global
 		{9435E27E-F4F9-4B7D-91FE-C4596A44746F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9435E27E-F4F9-4B7D-91FE-C4596A44746F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9435E27E-F4F9-4B7D-91FE-C4596A44746F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7D0BA19-7296-421A-88D6-FA1E414A9894}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7D0BA19-7296-421A-88D6-FA1E414A9894}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7D0BA19-7296-421A-88D6-FA1E414A9894}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7D0BA19-7296-421A-88D6-FA1E414A9894}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{713A1598-3FD2-487E-B361-E94F253995C3} = {A148E334-F197-4034-908C-5E0DC751523A}
+		{B34ED209-53FB-433E-A981-D4BA71877E63} = {A148E334-F197-4034-908C-5E0DC751523A}
+		{D7D0BA19-7296-421A-88D6-FA1E414A9894} = {B34ED209-53FB-433E-A981-D4BA71877E63}
 	EndGlobalSection
 EndGlobal

@@ -4,218 +4,237 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="PersistanceModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-  <EntityContainer Name="PersistanceModelStoreContainer">
-    <EntitySet Name="Users" EntityType="PersistanceModel.Store.Users" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="webpages_Membership" EntityType="PersistanceModel.Store.webpages_Membership" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="webpages_OAuthMembership" EntityType="PersistanceModel.Store.webpages_OAuthMembership" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="webpages_Roles" EntityType="PersistanceModel.Store.webpages_Roles" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="Parties" EntityType="PersistanceModel.Store.Parties" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="Players" EntityType="PersistanceModel.Store.Players" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="webpages_UsersInRoles" EntityType="PersistanceModel.Store.webpages_UsersInRoles" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="webpages_UsersInRoles1" EntityType="PersistanceModel.Store.webpages_UsersInRoles1" store:Type="Tables" Schema="dbo" />
-    <AssociationSet Name="FK_webpages_UsersInRoles_webpages_Roles" Association="PersistanceModel.Store.FK_webpages_UsersInRoles_webpages_Roles">
-      <End Role="webpages_Roles" EntitySet="webpages_Roles" />
-      <End Role="webpages_UsersInRoles" EntitySet="webpages_UsersInRoles" />
-    </AssociationSet>
-    <AssociationSet Name="FK_webpages_UsersInRoles_Users" Association="PersistanceModel.Store.FK_webpages_UsersInRoles_Users">
-      <End Role="Users" EntitySet="Users" />
-      <End Role="webpages_UsersInRoles" EntitySet="webpages_UsersInRoles" />
-    </AssociationSet>
-    <AssociationSet Name="PartyPlayer" Association="PersistanceModel.Store.PartyPlayer">
-      <End Role="Party" EntitySet="Parties" />
-      <End Role="Player" EntitySet="Players" />
-    </AssociationSet>
-    <AssociationSet Name="PlayerUser" Association="PersistanceModel.Store.PlayerUser">
-      <End Role="Player" EntitySet="Players" />
-      <End Role="User" EntitySet="Users" />
-    </AssociationSet>
-    <AssociationSet Name="FK_webpages_UsersInRoles1_webpages_Roles" Association="PersistanceModel.Store.FK_webpages_UsersInRoles1_webpages_Roles">
-      <End Role="webpages_Roles" EntitySet="webpages_Roles" />
-      <End Role="webpages_UsersInRoles1" EntitySet="webpages_UsersInRoles1" />
-    </AssociationSet>
-    <AssociationSet Name="FK_webpages_UsersInRoles1_User" Association="PersistanceModel.Store.FK_webpages_UsersInRoles1_User">
-      <End Role="User" EntitySet="Users" />
-      <End Role="webpages_UsersInRoles1" EntitySet="webpages_UsersInRoles1" />
-    </AssociationSet>
-  </EntityContainer>
-  <EntityType Name="Users">
-    <Key>
-      <PropertyRef Name="Id" />
-    </Key>
-    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="UserName" Type="nvarchar" Nullable="false" MaxLength="56" />
-    <Property Name="Player_Id" Type="bigint" Nullable="false" />
-  </EntityType>
-  <EntityType Name="webpages_Membership">
-    <Key>
-      <PropertyRef Name="UserId" />
-    </Key>
-    <Property Name="UserId" Type="int" Nullable="false" />
-    <Property Name="CreateDate" Type="datetime" Nullable="true" />
-    <Property Name="ConfirmationToken" Type="nvarchar" Nullable="true" MaxLength="128" />
-    <Property Name="IsConfirmed" Type="bit" Nullable="true" />
-    <Property Name="LastPasswordFailureDate" Type="datetime" Nullable="true" />
-    <Property Name="PasswordFailuresSinceLastSuccess" Type="int" Nullable="false" />
-    <Property Name="Password" Type="nvarchar" Nullable="false" MaxLength="128" />
-    <Property Name="PasswordChangedDate" Type="datetime" Nullable="true" />
-    <Property Name="PasswordSalt" Type="nvarchar" Nullable="false" MaxLength="128" />
-    <Property Name="PasswordVerificationToken" Type="nvarchar" Nullable="true" MaxLength="128" />
-    <Property Name="PasswordVerificationTokenExpirationDate" Type="datetime" Nullable="true" />
-  </EntityType>
-  <EntityType Name="webpages_OAuthMembership">
-    <Key>
-      <PropertyRef Name="Provider" />
-      <PropertyRef Name="ProviderUserId" />
-    </Key>
-    <Property Name="Provider" Type="nvarchar" Nullable="false" MaxLength="30" />
-    <Property Name="ProviderUserId" Type="nvarchar" Nullable="false" MaxLength="100" />
-    <Property Name="UserId" Type="int" Nullable="false" />
-  </EntityType>
-  <EntityType Name="webpages_Roles">
-    <Key>
-      <PropertyRef Name="RoleId" />
-    </Key>
-    <Property Name="RoleId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="RoleName" Type="nvarchar" Nullable="false" MaxLength="256" />
-  </EntityType>
-  <EntityType Name="Parties">
-    <Key>
-      <PropertyRef Name="Id" />
-    </Key>
-    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-  </EntityType>
-  <EntityType Name="Players">
-    <Key>
-      <PropertyRef Name="Id" />
-    </Key>
-    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="UserId" Type="int" Nullable="false" />
-    <Property Name="PartyId" Type="bigint" Nullable="false" />
-  </EntityType>
-  <EntityType Name="webpages_UsersInRoles">
-    <Key>
-      <PropertyRef Name="webpages_UsersInRoles_Users_RoleId" />
-      <PropertyRef Name="Users_Id" />
-    </Key>
-    <Property Name="webpages_UsersInRoles_Users_RoleId" Type="int" Nullable="false" />
-    <Property Name="Users_Id" Type="int" Nullable="false" />
-  </EntityType>
-  <EntityType Name="webpages_UsersInRoles1">
-    <Key>
-      <PropertyRef Name="webpages_UsersInRoles1_User_RoleId" />
-      <PropertyRef Name="Users1_Id" />
-    </Key>
-    <Property Name="webpages_UsersInRoles1_User_RoleId" Type="int" Nullable="false" />
-    <Property Name="Users1_Id" Type="int" Nullable="false" />
-  </EntityType>
-  <Association Name="PartyPlayer">
-    <End Role="Party" Type="PersistanceModel.Store.Parties" Multiplicity="1" />
-    <End Role="Player" Type="PersistanceModel.Store.Players" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Party">
-        <PropertyRef Name="Id" />
-      </Principal>
-      <Dependent Role="Player">
-        <PropertyRef Name="PartyId" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="PlayerUser">
-    <End Role="Player" Type="PersistanceModel.Store.Players" Multiplicity="1" />
-    <End Role="User" Type="PersistanceModel.Store.Users" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Player">
-        <PropertyRef Name="Id" />
-      </Principal>
-      <Dependent Role="User">
-        <PropertyRef Name="Player_Id" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_webpages_UsersInRoles_webpages_Roles">
-    <End Role="webpages_Roles" Type="PersistanceModel.Store.webpages_Roles" Multiplicity="1" />
-    <End Role="webpages_UsersInRoles" Type="PersistanceModel.Store.webpages_UsersInRoles" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="webpages_Roles">
-        <PropertyRef Name="RoleId" />
-      </Principal>
-      <Dependent Role="webpages_UsersInRoles">
-        <PropertyRef Name="webpages_UsersInRoles_Users_RoleId" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_webpages_UsersInRoles_Users">
-    <End Role="webpages_UsersInRoles" Type="PersistanceModel.Store.webpages_UsersInRoles" Multiplicity="*" />
-    <End Role="Users" Type="PersistanceModel.Store.Users" Multiplicity="1" />
-    <ReferentialConstraint>
-      <Principal Role="Users">
-        <PropertyRef Name="Id" />
-      </Principal>
-      <Dependent Role="webpages_UsersInRoles">
-        <PropertyRef Name="Users_Id" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_webpages_UsersInRoles1_webpages_Roles">
-    <End Role="webpages_Roles" Type="PersistanceModel.Store.webpages_Roles" Multiplicity="1" />
-    <End Role="webpages_UsersInRoles1" Type="PersistanceModel.Store.webpages_UsersInRoles1" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="webpages_Roles">
-        <PropertyRef Name="RoleId" />
-      </Principal>
-      <Dependent Role="webpages_UsersInRoles1">
-        <PropertyRef Name="webpages_UsersInRoles1_User_RoleId" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_webpages_UsersInRoles1_User">
-    <End Role="webpages_UsersInRoles1" Type="PersistanceModel.Store.webpages_UsersInRoles1" Multiplicity="*" />
-    <End Role="User" Type="PersistanceModel.Store.Users" Multiplicity="1" />
-    <ReferentialConstraint>
-      <Principal Role="User">
-        <PropertyRef Name="Id" />
-      </Principal>
-      <Dependent Role="webpages_UsersInRoles1">
-        <PropertyRef Name="Users1_Id" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-</Schema></edmx:StorageModels>
+    <Schema Namespace="PersistanceModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Games">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Parties">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="StatusId" Type="smallint" Nullable="false" />
+          <Property Name="GameId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="UpdatedDateUTC" Type="datetime" />
+          <Property Name="Version" Type="varchar" MaxLength="10" />
+          <Property Name="Data" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="Players">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="PartyId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Szin" Type="tinyint" />
+          <Property Name="ConnectionId" Type="varchar" MaxLength="50" />
+          <Property Name="Nick" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ClientStatus" Type="tinyint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Nick" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="webpages_Membership">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" />
+          <Property Name="ConfirmationToken" Type="nvarchar" MaxLength="128" />
+          <Property Name="IsConfirmed" Type="bit" />
+          <Property Name="LastPasswordFailureDate" Type="datetime" />
+          <Property Name="PasswordFailuresSinceLastSuccess" Type="int" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="PasswordChangedDate" Type="datetime" />
+          <Property Name="PasswordSalt" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="PasswordVerificationToken" Type="nvarchar" MaxLength="128" />
+          <Property Name="PasswordVerificationTokenExpirationDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="webpages_OAuthMembership">
+          <Key>
+            <PropertyRef Name="Provider" />
+            <PropertyRef Name="ProviderUserId" />
+          </Key>
+          <Property Name="Provider" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="ProviderUserId" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="webpages_Roles">
+          <Key>
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="RoleId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RoleName" Type="nvarchar" MaxLength="256" Nullable="false" />
+        </EntityType>
+        <EntityType Name="webpages_UsersInRoles">
+          <Key>
+            <PropertyRef Name="webpages_UsersInRoles_Users_RoleId" />
+            <PropertyRef Name="Users_Id" />
+          </Key>
+          <Property Name="webpages_UsersInRoles_Users_RoleId" Type="int" Nullable="false" />
+          <Property Name="Users_Id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="webpages_UsersInRoles1">
+          <Key>
+            <PropertyRef Name="webpages_UsersInRoles1_User_RoleId" />
+            <PropertyRef Name="Users1_Id" />
+          </Key>
+          <Property Name="webpages_UsersInRoles1_User_RoleId" Type="int" Nullable="false" />
+          <Property Name="Users1_Id" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_PartyPlayer">
+          <End Role="Parties" Type="Self.Parties" Multiplicity="1" />
+          <End Role="Players" Type="Self.Players" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Parties">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Players">
+              <PropertyRef Name="PartyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Players_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Players" Type="Self.Players" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Players">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_webpages_UsersInRoles_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="webpages_UsersInRoles" Type="Self.webpages_UsersInRoles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="webpages_UsersInRoles">
+              <PropertyRef Name="Users_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_webpages_UsersInRoles_webpages_Roles">
+          <End Role="webpages_Roles" Type="Self.webpages_Roles" Multiplicity="1" />
+          <End Role="webpages_UsersInRoles" Type="Self.webpages_UsersInRoles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="webpages_Roles">
+              <PropertyRef Name="RoleId" />
+            </Principal>
+            <Dependent Role="webpages_UsersInRoles">
+              <PropertyRef Name="webpages_UsersInRoles_Users_RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_webpages_UsersInRoles1_User">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="webpages_UsersInRoles1" Type="Self.webpages_UsersInRoles1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="webpages_UsersInRoles1">
+              <PropertyRef Name="Users1_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_webpages_UsersInRoles1_webpages_Roles">
+          <End Role="webpages_Roles" Type="Self.webpages_Roles" Multiplicity="1" />
+          <End Role="webpages_UsersInRoles1" Type="Self.webpages_UsersInRoles1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="webpages_Roles">
+              <PropertyRef Name="RoleId" />
+            </Principal>
+            <Dependent Role="webpages_UsersInRoles1">
+              <PropertyRef Name="webpages_UsersInRoles1_User_RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="PersistanceModelStoreContainer">
+          <EntitySet Name="Games" EntityType="Self.Games" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Parties" EntityType="Self.Parties" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Players" EntityType="Self.Players" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="webpages_Membership" EntityType="Self.webpages_Membership" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="webpages_OAuthMembership" EntityType="Self.webpages_OAuthMembership" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="webpages_Roles" EntityType="Self.webpages_Roles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="webpages_UsersInRoles" EntityType="Self.webpages_UsersInRoles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="webpages_UsersInRoles1" EntityType="Self.webpages_UsersInRoles1" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_PartyPlayer" Association="Self.FK_PartyPlayer">
+            <End Role="Parties" EntitySet="Parties" />
+            <End Role="Players" EntitySet="Players" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Players_Users" Association="Self.FK_Players_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Players" EntitySet="Players" />
+          </AssociationSet>
+          <AssociationSet Name="FK_webpages_UsersInRoles_Users" Association="Self.FK_webpages_UsersInRoles_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="webpages_UsersInRoles" EntitySet="webpages_UsersInRoles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_webpages_UsersInRoles_webpages_Roles" Association="Self.FK_webpages_UsersInRoles_webpages_Roles">
+            <End Role="webpages_Roles" EntitySet="webpages_Roles" />
+            <End Role="webpages_UsersInRoles" EntitySet="webpages_UsersInRoles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_webpages_UsersInRoles1_User" Association="Self.FK_webpages_UsersInRoles1_User">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="webpages_UsersInRoles1" EntitySet="webpages_UsersInRoles1" />
+          </AssociationSet>
+          <AssociationSet Name="FK_webpages_UsersInRoles1_webpages_Roles" Association="Self.FK_webpages_UsersInRoles1_webpages_Roles">
+            <End Role="webpages_Roles" EntitySet="webpages_Roles" />
+            <End Role="webpages_UsersInRoles1" EntitySet="webpages_UsersInRoles1" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="PersistanceModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityContainer Name="MainPersistanceEntities" p1:LazyLoadingEnabled="true" a:TypeAccess="Internal" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration">
-          <EntitySet Name="Users" EntityType="PersistanceModel.User" a:GetterAccess="Internal" />
+        <EntityContainer Name="MainPersistanceEntities" p1:LazyLoadingEnabled="false" a:TypeAccess="Internal" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration">
+          <EntitySet Name="UserDbs" EntityType="PersistanceModel.UserDb" a:GetterAccess="Internal" />
           <EntitySet Name="webpages_Membership" EntityType="PersistanceModel.webpages_Membership" a:GetterAccess="Internal" />
           <EntitySet Name="webpages_OAuthMembership" EntityType="PersistanceModel.webpages_OAuthMembership" a:GetterAccess="Internal" />
           <EntitySet Name="webpages_Roles" EntityType="PersistanceModel.webpages_Roles" a:GetterAccess="Internal" />
           <AssociationSet Name="webpages_UsersInRoles" Association="PersistanceModel.webpages_UsersInRoles">
             <End Role="webpages_Roles" EntitySet="webpages_Roles" />
-            <End Role="Users" EntitySet="Users" />
-          </AssociationSet>
-          <EntitySet Name="Parties" EntityType="PersistanceModel.Party" a:GetterAccess="Internal" />
-          <EntitySet Name="Players" EntityType="PersistanceModel.Player" a:GetterAccess="Internal" />
-          <AssociationSet Name="PartyPlayer" Association="PersistanceModel.PartyPlayer">
-            <End Role="Party" EntitySet="Parties" />
-            <End Role="Player" EntitySet="Players" />
-          </AssociationSet>
-          <AssociationSet Name="PlayerUser" Association="PersistanceModel.PlayerUser">
-            <End Role="Player" EntitySet="Players" />
-            <End Role="User" EntitySet="Users" />
+            <End Role="Users" EntitySet="UserDbs" />
           </AssociationSet>
           <AssociationSet Name="webpages_UsersInRoles1" Association="PersistanceModel.webpages_UsersInRoles1">
             <End Role="webpages_Roles" EntitySet="webpages_Roles" />
-            <End Role="User" EntitySet="Users" />
+            <End Role="User" EntitySet="UserDbs" />
+          </AssociationSet>
+          <EntitySet Name="GameDbs" EntityType="PersistanceModel.GameDb" />
+          <EntitySet Name="PartyDbs" EntityType="PersistanceModel.PartyDb" />
+          <EntitySet Name="PlayerDbs" EntityType="PersistanceModel.PlayerDb" />
+          <AssociationSet Name="FK_PartyPlayer" Association="PersistanceModel.FK_PartyPlayer">
+            <End Role="Party" EntitySet="PartyDbs" />
+            <End Role="Player" EntitySet="PlayerDbs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Players_Users" Association="PersistanceModel.FK_Players_Users">
+            <End Role="UserDb" EntitySet="UserDbs" />
+            <End Role="PlayerDb" EntitySet="PlayerDbs" />
           </AssociationSet>
         </EntityContainer>
-        <EntityType Name="User" a:TypeAccess="Internal" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration">
+        <EntityType Name="UserDb" a:TypeAccess="Public" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
-          <NavigationProperty Name="Player" Relationship="PersistanceModel.PlayerUser" FromRole="User" ToRole="Player" />
-          <Property Type="String" Name="UserName" Nullable="false" MaxLength="56" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="UserName" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Nick" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Players" Relationship="PersistanceModel.FK_Players_Users" FromRole="UserDb" ToRole="PlayerDb" />
         </EntityType>
         <EntityType Name="webpages_Membership" a:TypeAccess="Internal" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration">
           <Key>
@@ -253,28 +272,48 @@
         </EntityType>
         <Association Name="webpages_UsersInRoles">
           <End Role="webpages_Roles" Type="PersistanceModel.webpages_Roles" Multiplicity="*" />
-          <End Role="Users" Type="PersistanceModel.User" Multiplicity="*" />
+          <End Role="Users" Type="PersistanceModel.UserDb" Multiplicity="*" />
         </Association>
-        <EntityType Name="Party" a:TypeAccess="Internal" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration">
+        <Association Name="webpages_UsersInRoles1">
+          <End Type="PersistanceModel.webpages_Roles" Role="webpages_Roles" Multiplicity="*" />
+          <End Type="PersistanceModel.UserDb" Role="User" Multiplicity="*" />
+        </Association>
+        <EntityType Name="GameDb">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Type="Int64" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <NavigationProperty Name="Players" Relationship="PersistanceModel.PartyPlayer" FromRole="Party" ToRole="Player" />
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
-        <EntityType Name="Player" a:TypeAccess="Internal" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration">
+        <EntityType Name="PartyDb">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Type="Int64" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="Int32" Name="UserId" Nullable="false" />
-          <NavigationProperty Name="Party" Relationship="PersistanceModel.PartyPlayer" FromRole="Player" ToRole="Party" />
-          <Property Type="Int64" Name="PartyId" Nullable="false" />
-          <NavigationProperty Name="User" Relationship="PersistanceModel.PlayerUser" FromRole="Player" ToRole="User" />
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="StatusId" Type="Int16" Nullable="false" />
+          <NavigationProperty Name="Players" Relationship="PersistanceModel.FK_PartyPlayer" FromRole="Party" ToRole="Player" />
+          <Property Name="GameId" Type="Guid" Nullable="false" />
+          <Property Name="UpdatedDateUTC" Type="DateTime" Precision="3" />
+          <Property Name="Version" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Data" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
-        <Association Name="PartyPlayer">
-          <End Type="PersistanceModel.Party" Role="Party" Multiplicity="1" />
-          <End Type="PersistanceModel.Player" Role="Player" Multiplicity="*" />
+        <EntityType Name="PlayerDb">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="PartyId" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="Party" Relationship="PersistanceModel.FK_PartyPlayer" FromRole="Player" ToRole="Party" />
+          <Property Name="Szin" Type="Byte" />
+          <Property Name="ConnectionId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Nick" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="User" Relationship="PersistanceModel.FK_Players_Users" FromRole="PlayerDb" ToRole="UserDb" />
+          <Property Name="ClientStatus" Type="Byte" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_PartyPlayer">
+          <End Type="PersistanceModel.PartyDb" Role="Party" Multiplicity="1" />
+          <End Type="PersistanceModel.PlayerDb" Role="Player" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Party">
               <PropertyRef Name="Id" />
@@ -284,13 +323,17 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="PlayerUser">
-          <End Type="PersistanceModel.Player" Role="Player" Multiplicity="1" />
-          <End Type="PersistanceModel.User" Role="User" Multiplicity="0..1" />
-        </Association>
-        <Association Name="webpages_UsersInRoles1">
-          <End Type="PersistanceModel.webpages_Roles" Role="webpages_Roles" Multiplicity="*" />
-          <End Type="PersistanceModel.User" Role="User" Multiplicity="*" />
+        <Association Name="FK_Players_Users">
+          <End Type="PersistanceModel.UserDb" Role="UserDb" Multiplicity="1" />
+          <End Type="PersistanceModel.PlayerDb" Role="PlayerDb" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserDb">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PlayerDb">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
         </Association>
       </Schema>
     </edmx:ConceptualModels>
@@ -298,10 +341,11 @@
     <edmx:Mappings>
     <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
   <EntityContainerMapping StorageEntityContainer="PersistanceModelStoreContainer" CdmEntityContainer="MainPersistanceEntities">
-    <EntitySetMapping Name="Users">
-      <EntityTypeMapping TypeName="IsTypeOf(PersistanceModel.User)">
+    <EntitySetMapping Name="UserDbs">
+      <EntityTypeMapping TypeName="IsTypeOf(PersistanceModel.UserDb)">
         <MappingFragment StoreEntitySet="Users">
-          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Nick" ColumnName="Nick" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="UserName" ColumnName="UserName" />
         </MappingFragment>
       </EntityTypeMapping>
@@ -340,36 +384,12 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Parties">
-      <EntityTypeMapping TypeName="IsTypeOf(PersistanceModel.Party)">
-        <MappingFragment StoreEntitySet="Parties">
-          <ScalarProperty Name="Id" ColumnName="Id" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="Players">
-      <EntityTypeMapping TypeName="IsTypeOf(PersistanceModel.Player)">
-        <MappingFragment StoreEntitySet="Players">
-          <ScalarProperty Name="Id" ColumnName="Id" />
-          <ScalarProperty Name="UserId" ColumnName="UserId" />
-          <ScalarProperty Name="PartyId" ColumnName="PartyId" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <AssociationSetMapping Name="webpages_UsersInRoles" TypeName="PersistanceModel.webpages_UsersInRoles" StoreEntitySet="webpages_UsersInRoles">
       <EndProperty Name="webpages_Roles">
         <ScalarProperty Name="RoleId" ColumnName="webpages_UsersInRoles_Users_RoleId" />
       </EndProperty>
       <EndProperty Name="Users">
         <ScalarProperty Name="Id" ColumnName="Users_Id" />
-      </EndProperty>
-    </AssociationSetMapping>
-    <AssociationSetMapping Name="PlayerUser" TypeName="PersistanceModel.PlayerUser" StoreEntitySet="Users">
-      <EndProperty Name="Player">
-        <ScalarProperty Name="Id" ColumnName="Player_Id" />
-      </EndProperty>
-      <EndProperty Name="User">
-        <ScalarProperty Name="Id" ColumnName="Id" />
       </EndProperty>
     </AssociationSetMapping>
     <AssociationSetMapping Name="webpages_UsersInRoles1" TypeName="PersistanceModel.webpages_UsersInRoles1" StoreEntitySet="webpages_UsersInRoles1">
@@ -380,6 +400,39 @@
         <ScalarProperty Name="Id" ColumnName="Users1_Id" />
       </EndProperty>
     </AssociationSetMapping>
+          <EntitySetMapping Name="GameDbs">
+            <EntityTypeMapping TypeName="PersistanceModel.GameDb">
+              <MappingFragment StoreEntitySet="Games">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PartyDbs">
+            <EntityTypeMapping TypeName="PersistanceModel.PartyDb">
+              <MappingFragment StoreEntitySet="Parties">
+                <ScalarProperty Name="Data" ColumnName="Data" />
+                <ScalarProperty Name="Version" ColumnName="Version" />
+                <ScalarProperty Name="UpdatedDateUTC" ColumnName="UpdatedDateUTC" />
+                <ScalarProperty Name="GameId" ColumnName="GameId" />
+                <ScalarProperty Name="StatusId" ColumnName="StatusId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PlayerDbs">
+            <EntityTypeMapping TypeName="PersistanceModel.PlayerDb">
+              <MappingFragment StoreEntitySet="Players">
+                <ScalarProperty Name="ClientStatus" ColumnName="ClientStatus" />
+                <ScalarProperty Name="Nick" ColumnName="Nick" />
+                <ScalarProperty Name="ConnectionId" ColumnName="ConnectionId" />
+                <ScalarProperty Name="Szin" ColumnName="Szin" />
+                <ScalarProperty Name="PartyId" ColumnName="PartyId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping></edmx:Mappings>
   </edmx:Runtime>
@@ -396,6 +449,7 @@
         <DesignerProperty Name="EnablePluralization" Value="True" />
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+        <DesignerProperty Name="UseLegacyProvider" Value="True" />
       </DesignerInfoPropertySet>
     </Options>
     <!-- Diagram content (shape and connector positions) -->

@@ -12,11 +12,17 @@ namespace GameCenterCore.Implementation.Persistance
     using System;
     using System.Collections.Generic;
     
-    internal partial class User
+    public partial class PlayerDb
     {
-        public int Id { get; set; }
-        public string UserName { get; set; }
+        public System.Guid Id { get; set; }
+        public int UserId { get; set; }
+        public System.Guid PartyId { get; set; }
+        public Nullable<byte> Szin { get; set; }
+        public string ConnectionId { get; set; }
+        public string Nick { get; set; }
+        public byte ClientStatus { get; set; }
     
-        public virtual Player Player { get; set; }
+        public virtual PartyDb Party { get; set; }
+        public virtual UserDb User { get; set; }
     }
 }

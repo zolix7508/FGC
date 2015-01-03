@@ -10,6 +10,7 @@ namespace GameCenterCore.ErrorHandling
     {
         LoginError = -1,
         Undefined = 0,
-        
+        PartyNotFound = -2,
+
     }
 }

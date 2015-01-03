@@ -18,6 +18,7 @@ namespace GameCenterCore.Implementation.Persistance
         public MainPersistanceEntities()
             : base("name=MainPersistanceEntities")
         {
+            this.Configuration.LazyLoadingEnabled = false;
         }
     
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -25,11 +26,12 @@ namespace GameCenterCore.Implementation.Persistance
             throw new UnintentionalCodeFirstException();
         }
     
-        internal DbSet<User> Users { get; set; }
+        internal DbSet<UserDb> UserDbs { get; set; }
         internal DbSet<webpages_Membership> webpages_Membership { get; set; }
         internal DbSet<webpages_OAuthMembership> webpages_OAuthMembership { get; set; }
         internal DbSet<webpages_Roles> webpages_Roles { get; set; }
-        internal DbSet<Party> Parties { get; set; }
-        internal DbSet<Player> Players { get; set; }
+        public DbSet<GameDb> GameDbs { get; set; }
+        public DbSet<PartyDb> PartyDbs { get; set; }
+        public DbSet<PlayerDb> PlayerDbs { get; set; }
     }
 }

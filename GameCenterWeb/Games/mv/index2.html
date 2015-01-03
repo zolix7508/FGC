@@ -1,0 +1,136 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Javascript Turtle</title>
+    <!--<script type="text/javascript" src="jquery-1.6.4.min.js"></script>-->
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>-->
+    <!--<link type="text/css" rel="stylesheet" href="turtle.css" />-->
+    <style>
+        .base6
+        {
+            position: absolute;
+            background-image: url(alap2.bmp);
+            width: 114px;
+            min-height: 98px;
+            background-size: 100% 100%;
+            text-align: center;
+            padding-top: 0px;
+            font-size: 30pt;
+            border: 1px solid black;
+            opacity: 0.5
+        }
+        .alap-szel
+        {
+            position: absolute;
+            background-image: url(alap-szel.bmp);
+            width: 114px;
+            min-height: 98px;
+            background-size: 100% 100%;
+            text-align: center;
+            padding-top: 0px;
+            font-size: 30pt;
+        }
+        #board 
+        {
+            position: fixed;
+            left: 990px;
+        }
+    </style>
+</head>
+<body>
+    <div id="midcolumn" style="background-color: white; min-width: 500px; min-height: 500px;">
+    </div>
+    <div>
+        XXXXXXXX</div>
+<map id="atlas">
+<area shape="poly" coords="113,39,187,21,180,72,141,77,117,86" href="javascript:void(0)" alt="Europe" />
+</map>
+
+<div id="palya">
+    <script>
+        function App() {
+            var self = this;
+            self.NX = 6+2;
+            self.NY = 23+2;
+
+            var rx = 57 * 2; ry = 49 * 2;
+            var deg = Math.PI / 3;
+            var dx = rx * Math.cos(deg), dy = ry * Math.sin(deg);
+            var ddx = rx + dx - 1;
+            var ddy = ry / 2 - 2;
+
+            function drawPalya() {
+                for (var y = 0; y < self.NY; y++) {
+                    for (var x = 0; x < self.NX; x++)
+                        $('#base' + (y * self.NX + x))
+                        .css({ 'left': (1 - (y % 2)) * 1.5 * dx + (ddx * x)-ddx + 'px', 'top': (ddy * y) + 'px' });
+                }
+            }
+
+            self.init = function () {
+                for (var i = 0; i < self.NX * self.NY; i++) {
+                    document.write('<div class="base6" width="' + 2 * rx + '" heigth="' + 2 * ry + '" id="base' + i + '">' + i + '</div>');
+                }
+                var alsoPeremIdx = (self.NY - 2) * self.NX;
+                for (var i = 0; i < self.NX*2; i++) {
+                    $('#base' + i).removeClass('base6').addClass('alap-szel');
+                    $('#base' + (i + alsoPeremIdx)).removeClass('base6').addClass('alap-szel');
+                }
+                for (var i = 0; i < self.NY * 2; i++) {
+                    $('#base' + (i * self.NX)).removeClass('base6').addClass('alap-szel');
+                    $('#base' + ((i+2)*self.NX-1)).removeClass('base6').addClass('alap-szel');
+                }
+            } ();
+
+            var hdn = [21, 22, 169, 177, 180, 182];
+            for (var i = 0; i < hdn.length; i++) {
+                $('#base' + hdn[i]).removeClass('base6').addClass('alap-szel');
+            }
+
+            self.drawPalya = drawPalya;
+
+            return self;
+        }
+
+        var app = new App();
+        app.drawPalya();
+        console.log($('div.base6').length);
+
+        var x0 = y0 = 100;
+
+
+        function newH6() {
+            right(120);
+            penup();
+            forward(100);
+            left(120);
+            forward(50);
+        }
+
+
+//        var rx = 57 * 2; ry = 49 * 2;
+//        var deg = Math.PI / 3;
+//        var dx = rx * Math.cos(deg), dy = ry * Math.sin(deg);
+//        console.log(dx); console.log(dy);
+//        var x = 100, y = 0;
+
+        $(function () {
+            //            for (var y = 0; y < 22; y++) {
+            //                for (var x = 0; x < 6; x++)
+            //                    $('#base' + (y * 6 + x))
+            //                        .css({ 'left': (1 - (y % 2)) * 1.5 * dx + ((rx + dx - 1) * x) + 'px', 'top': ((ry / 2 - 2) * y) + 'px' });
+            //            }
+
+            $('#palya').mousemove(function (e) {
+                $('#board').html(e.pageX + ', ' + e.pageY);
+            });
+        });
+
+     
+    </script>
+</div>
+<div id="board"></div>
+
+</body>
+</html>

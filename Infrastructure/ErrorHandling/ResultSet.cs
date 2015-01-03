@@ -21,12 +21,27 @@ namespace Infrastructure.Core.ErrorHandling
             }
         }
 
+        public bool IsOk
+        {
+            get
+            {
+                return _results.Any(r => r.IsError);
+            }
+        }
+
         #endregion
 
         #region Methods
         public ResultSet<TCode, TResult, TContext> Add(TCode code)
         {
             var result = new TResult { ResultCode = code };
+            _results.Add(result);
+            return this;
+        }
+
+        public ResultSet<TCode, TResult, TContext> Add(TCode code, TContext context)
+        {
+            var result = new TResult { ResultCode = code, Context = context };
             _results.Add(result);
             return this;
         }

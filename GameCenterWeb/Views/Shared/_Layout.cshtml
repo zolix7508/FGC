@@ -10,12 +10,6 @@
     </head>
     <body>
         <header>
-            <div>
-                <input type="hidden" id="displayname" />
-                <input id="message" type="text" />
-                <input id="sendmessage" type="button" value="Send" />
-                <div id="discussion"></div>
-            </div>
             <div class="content-wrapper">
                 <div class="float-left">
                     <p class="site-title">@Html.ActionLink("your logo here", "Index", "Home")</p>
@@ -50,36 +44,8 @@
 
         @Scripts.Render("~/bundles/jquery", "~/bundles/jquery")
         @*<script src="/Scripts/jquery-1.8.2.js"></script>*@
-        <script src="/Scripts/jquery.signalR-2.1.2.js"></script>
-        <script src="/signalr/hubs"></script>
-        <script type="text/javascript">
-            $(function () {
-                // Declare a proxy to reference the hub.
-                var chat = $.connection.appHub;
-                // Create a function that the hub can call to broadcast messages.
-                chat.client.broadcastMessage = function (name, message) {
-                    // Html encode display name and message.
-                    var encodedName = $('<div />').text(name).html();
-                    var encodedMsg = $('<div />').text(message).html();
-                    // Add the message to the page.
-                    $('#discussion').append('<li><strong>' + encodedName
-                        + '</strong>:&nbsp;&nbsp;' + encodedMsg + '</li>');
-                };
-                // Get the user name and store it to prepend to messages.
-                $('#displayname').val(prompt('Enter your name:', ''));
-                // Set initial focus to message input box.
-                $('#message').focus();
-                // Start the connection.
-                $.connection.hub.start().done(function () {
-                    $('#sendmessage').click(function () {
-                        // Call the Send method on the hub.
-                        chat.server.send($('#displayname').val(), $('#message').val());
-                        // Clear text box and reset focus for next comment.
-                        $('#message').val('').focus();
-                    });
-                });
-            });
-    </script>
+        @*<script src="/Scripts/jquery.signalR-2.1.2.js"></script>
+        <script src="/signalr/hubs"></script>*@
         @RenderSection("scripts", required: false)
     </body>
 </html>

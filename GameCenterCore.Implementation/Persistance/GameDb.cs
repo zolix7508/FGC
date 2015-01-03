@@ -12,15 +12,9 @@ namespace GameCenterCore.Implementation.Persistance
     using System;
     using System.Collections.Generic;
     
-    internal partial class Party
+    public partial class GameDb
     {
-        public Party()
-        {
-            this.Players = new HashSet<Player>();
-        }
-    
-        public long Id { get; set; }
-    
-        public virtual ICollection<Player> Players { get; set; }
+        public System.Guid Id { get; set; }
+        public string Name { get; set; }
     }
 }

@@ -7,18 +7,27 @@ using System.Threading.Tasks;
 
 namespace GameCenterCore.Contracts
 {
-    //public enum PartyStatus : int
-    //{
-    //    Running=1
-    //}
+    public enum PartyStatus : short
+    {
+        Created = 1,
+        Running = 2
+    }
+
+    public enum PartyPhase : byte
+    {
+        InitialSetup = 1,
+        Playing = 2
+    }
 
     public interface IParty
     {
-        //protected IGame Game;
-        //protected List<IPlayer> Players;
-        //protected PartyOptions Options { get; set; }
-        //PartyStatus PartyStatus { get; }
+        Guid GameId { get; set; }
+        Guid Id { get; set; }
         bool IsRunning { get; }
-        IEnumerable<IPlayer> Players { get; }
+        PartyStatus StatusId { get; set; }
+        IEnumerable<IPlayer> Players { get; set; }
+        DateTime? UpdatedDateUtc { get; set; }
+        string Version { get; set; }
+        string Data { get; set; }
     }
 }
