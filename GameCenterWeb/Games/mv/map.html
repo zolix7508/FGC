@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>MV</title>
+    <link type="text/css" rel="stylesheet" href="mv.css" />
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+    <script src="/Scripts/jquery.signalR-2.1.2.js"></script>
+    <script type="text/javascript" src="/signalr/hubs"></script>
+    <script type="text/javascript" src="util.js"></script>
+    <script type="text/javascript" src="common.js"></script>
+    <script type="text/javascript" src="graphic.js"></script>
+    <script type="text/javascript" src="localizer.js"></script>
+    <script type="text/javascript" src="jatekosmanager.js"></script>
+    <script type="text/javascript" src="app.js"></script>
+    <script type="text/javascript" src="mvapp.js"></script>
+</head>
+<body id="body" style="margin: 0">
+    <div id="wrapper">
+        <canvas id="mapcanvas" width="1200" height="990" class="b"></canvas>
+        <script>
+            app.drawBackGround();
+        </script>
+        <img src="images/alap2.bmp" width="1100" height="1800" alt="Planets" usemap="#planetmap" style="position:absolute;left:0; top:0; opacity:0" />
+        <map name="planetmap">
+            <script type="text/javascript">
+                var c = document.getElementById("mapcanvas");
+                var ctx = c.getContext("2d");
+                app.drawMap();
+            </script>
+        </map>
+    </div>
+    <div id="players">
+
+    </div>
+    <div id="selectedBabu" class="selectedBabu"></div>
+    <div id="#templates" style="display:inherit">
+        <div id="tmp_babu" data-babu="1">
+            <div class="babu-szam"></div>
+        </div>
+        <div id="tmp_lada" data-lada="1">
+        </div>
+        <div data-ng-app="mvApp">
+            <div id="board" ng-controller="boardController">
+                <div>{{ currentPlayerStr() }}</div>
+                <div ng-switch="partyPhase">
+                    <div ng-switch-when="1">
+                        PH 1
+                        <table>
+                            <tr ng-repeat="player in players">
+                                <td>{{ player.Nick }}</td>
+                                <td>{{ connectionStatus(player.ClientStatus) }}</td>
+                                <td>
+                                    <div ng-if="isThisClient(player.Id) && !player.szinMehet" class="animate-if">
+                                        <select id="ddSzin" ng-options="item as '' for item in szabadSzinek" ng-model="selectedSzin" ng-change="szinValasztas(selectedSzin)" ng-class="szin(selectedSzin.toString())"></select>
+                                        <div>{{ selectedSzin }}</div>
+                                        <input type="button" value="Mehet" ng-click="mehet()" />
+                                    </div>
+                                    <div ng-if="!isThisClient(player.Id) || player.szinMehet" class="animate-if" ng-class="szin(player.Szinkod.toString())">
+                                        KUTTYA
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div ng-switch-when="2">
+                        <table>
+                            <tr ng-repeat="player in players">
+                                <td>{{ player.nev }}</td>
+                                <td>{{ player.status }}</td>
+                            </tr>
+                        </table>
+                        <div><a href="javascript:void(0)" data-remove-babu="1">Remove Babu</a></div>
+                        <div><a href="javascript:void(0)" data-place-resource="2">Keszlet elhelyezes</a></div>
+                    </div>
+                    <div>{{ message }}</div>
+                </div>
+                <div id="msgBoard"></div>
+            </div>
+        </div>
+</body>
+</html>
