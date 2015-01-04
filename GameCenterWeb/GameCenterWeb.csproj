@@ -290,6 +290,7 @@
     <Content Include="Games\mv\images\alap-szel.bmp" />
     <Content Include="Games\mv\images\alap.bmp" />
     <Content Include="Games\mv\images\alap2.bmp" />
+    <Content Include="Games\mv\images\alap2.png" />
     <Content Include="Games\mv\images\babu_k.png" />
     <Content Include="Games\mv\images\babu_p.png" />
     <Content Include="Games\mv\images\babu_s.png" />
@@ -404,6 +405,10 @@
     <ProjectReference Include="..\GameCenterCore\GameCenterCore.csproj">
       <Project>{d236f38a-a14e-43e5-a525-0ee9f91e2fbb}</Project>
       <Name>GameCenterCore</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Games\mv\mvserver\mvserver.csproj">
+      <Project>{d7d0ba19-7296-421a-88d6-fa1e414a9894}</Project>
+      <Name>mvserver</Name>
     </ProjectReference>
     <ProjectReference Include="..\Infrastructure\Infrastructure.Core.csproj">
       <Project>{27098ad8-eb8d-41d2-8d02-57646cb2bcf4}</Project>

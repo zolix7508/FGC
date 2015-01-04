@@ -13,11 +13,28 @@ namespace mvserver
     {
         private static readonly object obj = new object();
         private static readonly Dictionary<Guid, mvParty> mvPartik = new Dictionary<Guid, mvParty>();
-        public void AddParty(Guid key, mvParty party)
+
+        private CustomIdentity _user;
+        private CustomIdentity user
         {
-            lock (obj)
+            get
             {
-                mvPartik.Add(key, party);
+                if (_user == null) _user = Context.User.Identity as CustomIdentity;
+                return _user;
+            }
+        }
+
+        private Guid? _requestPartyId;
+        Guid RequestPartyId {
+            get {
+                if (!_requestPartyId.HasValue) {
+                    Guid partyId;
+                    if (!Guid.TryParse(Context.Request.QueryString["partyId"], out partyId))
+                        partyId = Guid.Empty;
+
+                    _requestPartyId = partyId;
+                }
+                return _requestPartyId.Value;
             }
         }
 
@@ -29,11 +46,48 @@ namespace mvserver
             Clients.Caller.setStatus(party.Data);
         }
 
+
+        public void babuClicked(short b)
+        {
+            if (user != null)
+            {
+                IParty party = null;
+                mvParty mvp = mvPartik[user.PartyId];
+                var resp = CheckCurrentPlayer(mvp);
+                if (resp.isEmpty)
+                    resp = mvp.babuClicked(b);
+                if (resp.StatusChanged)
+                {
+                    party = PartyService.GetById(user.PartyId);
+                    party.Data = Serialize.ToJson(mvp);
+                    PartyService.Update(party);
+                }
+                SendResponse(resp, party);
+            }
+        }
+
+
+        public void action(int idx)
+        {
+            IParty party = null;
+            mvParty mvp = mvPartik[user.PartyId];
+            var resp = CheckCurrentPlayer(mvp);
+            if (resp.isEmpty)
+                resp = mvp.Action(idx);
+            if (resp.StatusChanged)
+            {
+                party = PartyService.GetById(user.PartyId);
+                party.Data = Serialize.ToJson(mvp);
+                PartyService.Update(party);
+            }
+            SendResponse(resp, party);
+        }
+
         public void szinSelected(byte kod)
         {
             //var szin = mvSzin.GetSzin(kod);
             var user = Context.User.Identity as CustomIdentity;
-            if (user != null && kod != null)
+            if (user != null)
             {
                 mvParty mvp = mvPartik[user.PartyId];
                 var player = mvp.players.FirstOrDefault(p => p.Id == user.PlayerId);
@@ -73,6 +127,75 @@ namespace mvserver
             }
         }
 
+
+        #region Helper Methods
+        protected void AddParty(Guid key, mvParty party)
+        {
+            lock (obj)
+            {
+                mvPartik.Add(key, party);
+            }
+        }
+
+        mvResponse CheckClient()
+        {
+            var resp = new mvResponse();
+            if (user == null)
+                resp.AddMsgItem("notLoggedIn");
+            else if (user.PartyId != RequestPartyId)
+                resp.AddMsgItem("notYourParty");
+
+            return resp;
+        }
+
+        mvResponse CheckCurrentPlayer(mvParty mvp)
+        {
+            var resp = CheckClient();
+            if (resp.isEmpty)
+                if (mvp == null || mvp.CurrentPlayerIdx < 0 || mvp.players[mvp.CurrentPlayerIdx].Id != user.PlayerId)
+                    resp.AddMsgItem("notYourTurn");
+
+            return resp;
+        }
+
+        void SendResponse(mvResponse resp, IParty party)
+        {
+            if (user == null) return;
+            var groupName = user.PartyId.ToString();
+            var items = resp.GetItems();
+
+            foreach (mvResponseMsgItem item in items.OfType<mvResponseMsgItem>())
+            {
+                Clients.Group(groupName).msg(item.Message);
+            }
+
+            if (party != null)
+                foreach (mvResponseActionItem item in items.OfType<mvResponseActionItem>())
+                {
+                    switch (item.ActionKind)
+                    {
+                        case ActionKind.FullStatus:
+                            Clients.Group(groupName).setStatus(party.Data);
+                            break;
+                        case ActionKind.SelectBabu:
+                            Clients.Group(groupName).processBabu(item.Items[0]);
+                            break;
+                        case ActionKind.DrawBabuk:
+                            Clients.Group(groupName).drawBabuk(item.Items[0], item.Items[1], item.Items[2]);
+                            break;
+                    }
+                }
+        }
+
+        void SendToCaller(mvResponse resp)
+        {
+            foreach (mvResponseMsgItem item in resp.GetItems().OfType<mvResponseMsgItem>())
+            {
+                Clients.Caller.msg(item.Message);
+            }
+        }
+
+        
         protected IParty GetPartyStatus(Guid partyId, out mvParty mvParty)
         {
             mvParty = null;
@@ -114,15 +237,23 @@ namespace mvserver
 
         protected void OnConnect(Task t)
         {
-            Guid partyId; mvParty mvParty;
-            var user = Context.User.Identity as CustomIdentity;
-            Guid playerId = user != null ? user.PlayerId : Guid.Empty;
-            if (Guid.TryParse(Context.Request.QueryString["partyId"], out partyId))
+            var resp = CheckClient();
+            if (resp.isEmpty)
             {
-                var party = GetPartyStatus(partyId, out mvParty);
-                if (party != null) Clients.Caller.setStatus(party.Data, playerId);
+                mvParty mvParty;
+                Guid partyId = RequestPartyId;
+                Guid playerId = user != null ? user.PlayerId : Guid.Empty;
+                if (partyId != Guid.Empty)
+                {
+                    var party = GetPartyStatus(partyId, out mvParty);
+                    if (party != null) Clients.Caller.setStatus(party.Data, playerId);
+                }
             }
+            else
+                SendToCaller(resp);
         }
+
+        #endregion
 
         public override Task OnConnected()
         {

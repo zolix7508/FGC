@@ -13,13 +13,13 @@ namespace mvserver
         public Phase phase { get; set; }
         public short CurrentPlayerIdx { get; set; }
         public short CurrentPlayerLepes { get; set; }
-        protected bool lockedOnBabu;
-        protected int selectedBabuId;
+        public bool lockedOnBabu;
+        public short selectedBabuId;
 
         public int NX;
         public int NY;
-        protected List<mvTileGroup> groups;
-        protected int maxGroupId = 1, oldMaxGroupId;
+        public List<mvTileGroup> groups;
+        public int maxGroupId = 1, oldMaxGroupId;
 
         public List<mvPlayer> players { get; set; }
         public List<mvBabu> babuk { get; set; }
@@ -29,6 +29,7 @@ namespace mvserver
         public List<int> hdn = new List<int>() {4, 5, 114, 120, 123, 125};
         public List<int> nyariTabor = new List<int>() { 19, 84, 35, 112 };
         public List<int> teliTabor = new List<int>() { 56, 98, 21, 70 };
+        public List<int> barlang { get; set; }
 
         protected struct nyariKovek
         {
@@ -44,15 +45,269 @@ namespace mvserver
         }
     //var teliKovek = { Bogyo: 30, Gyoker: 18, Fuszer: 5, Irha: 10, Koponya: 10, Fegyver: 3, Mamut: 12 };
         protected struct teliKovek { }
-    protected List<int> barlang {get; set; }
 
     private int N;
+    private bool babuIsSelected { get { return selectedBabuId >= 0; } }
 
-        public void Init(IEnumerable<IPlayer> _players)
+    private mvBabu SelectedBabu
+    {
+        get
+        {
+            if (babuk == null) return null;
+            return babuk.FirstOrDefault(b => b.id == selectedBabuId);
+        }
+    }
+
+    #region jatek
+    internal mvResponse Action(int idx)
+    {
+        var resp = new mvResponse();
+        ResultCode result = ResultCode.Unknown;
+        if (babuIsSelected)
+        {
+            if (idx > -1)
+            {
+                result = checkIfValidMove(idx, false);
+                if (result == ResultCode.Ok || result == ResultCode.LockOnBabu)
+                {
+                    if (result == ResultCode.LockOnBabu) lockedOnBabu = true;
+                    var oldIdx = SelectedBabu.tileIdx;
+                    SelectedBabu.tileIdx = idx;
+                    resp.AddActionItem(ActionKind.DrawBabuk, babuk, oldIdx, players);
+                    resp.AddActionItem(ActionKind.DrawBabuk, babuk, idx, players);
+                    tileLeft(oldIdx, SelectedBabu);
+                    //processIfTeliTabor(idx);
+                    nextMove();
+                }
+                else
+                {
+                    //message = Localizer.message(result);
+                    //updateBoard(message);
+                    resp.AddMsgItem("message", result);
+                }
+            }
+            else
+                result = ResultCode.Ok; // removeBabu(SelectedBabu);
+        } else if (idx > -1) {
+            var tile = tiles[idx];
+            if (tile.isRemovable()) {
+                if (tile.isolated) {
+                    RemoveIsolatedGroup(tile.group);
+                    result = ResultCode.Ok;
+                }
+            }
+        }
+        if (!babuIsSelected && result == ResultCode.Unknown)
+        {
+            resp.AddMsgItem("doSomething", GetCurrentPlayerNick());
+        }
+        return resp;
+    }
+
+
+    void RemoveIsolatedGroup(int groupId)
+    {
+        var group = groups.FirstOrDefault(g => g.id == groupId);
+        if (group != null)
+            group.tileIdxs.ForEach(i => RemoveTile(i, null));
+
+        //graphics.unmarkIsolatedTiles(group.tileIdxs);
+    }
+
+
+    ResultCode checkIfValidMove(int idx, bool dontCheckSzomszeds)
+    {
+        if (!babuIsSelected) return ResultCode.BabuNotSelected;
+        if (idx == -1) return ResultCode.Ok;
+        var sourceTile = tiles[SelectedBabu.tileIdx];
+        var targetTile = tiles[idx];
+        if (sourceTile == targetTile) return ResultCode.SameTile;
+        return checkIfValidTargetTile(idx, sourceTile, targetTile, false);
+    }
+
+    ResultCode checkIfValidTargetTile(int idx, mvTile sourceTile, mvTile targetTile, bool dontCheckSzomszeds)
+    {
+        if (!targetTile.isForBabu()) return ResultCode.InvalidTile;
+        if (sourceTile.isBarlang() && targetTile.isBarlang()) return ResultCode.Ok;
+        if (!dontCheckSzomszeds && (!targetTile.szomszedok.Any(sz => sz == SelectedBabu.tileIdx))) return ResultCode.NotSzomszedTile;
+        if (targetTile.tileKind == TileKind.Mamut && !GetPlayer(CurrentPlayerIdx).hasFegyver) return ResultCode.NoWeapon;
+        if (getBabukCountOnTile(idx, null) > 0 && !targetTile.allowsMoreBabus())
+        {
+            if (CurrentPlayerLepes > 0)
+                return ResultCode.LockOnBabu;
+            else
+                return ResultCode.MoreBabusNotAllowed;
+        }
+        return ResultCode.Ok;
+    }
+
+    int getBabukCountOnTile(int idx, mvBabu excludeBabu)
+    {
+        return babuk.Count(b => b.tileIdx == idx && b != excludeBabu);
+    }
+
+
+    void tileLeft(int idx, mvBabu babu)
+    {
+        if ( getBabukCountOnTile(idx, babu) == 0 )
+        {
+            var tile = tiles[idx];
+            var tileRemoved = RemoveTile(idx, tile);
+            if (tileRemoved) players[babu.playerIdx].processLeszedettTile(tile);
+        }
+    }
+
+
+    bool RemoveTile(int idx, mvTile tile) {
+        if (tile == null) tile = tiles[idx];
+        if (!tile.isRemovable()) return false;
+
+        foreach (int sz in tile.szomszedok) {
+            for (int j=0; j<tiles[sz].szomszedok.Count; j++) 
+                if (tiles[sz].szomszedok[j] == idx) {
+                    tiles[sz].szomszedok.RemoveAt(j);
+                    break;
+                }
+        }
+
+        SetTile(tile, TileKind.Init);
+
+        if (tile.isolated) return false;
+
+        oldMaxGroupId = maxGroupId;
+        foreach (var sz in tile.szomszedok) {
+            if (tiles[sz].group <= oldMaxGroupId)
+                PropagateGroup(tiles[sz], ++maxGroupId, oldMaxGroupId, sz);
+        }
+        
+        groups = new List<mvTileGroup>();
+        for (int i=0; i<tiles.Count; i++) {
+            var tile2 = tiles[i];
+            if (tile2.isForBabu()) {
+                int n = -1;
+                for (int g=0; g<groups.Count; g++) {
+                    if (groups[g].id == tile.group) { n=g; break; }
+                }
+                if (n != -1)
+                    groups[n].tileIdxs.Add(i);
+                else
+                    groups.Add(new mvTileGroup { id = tile.group, tileIdxs = new List<int>() {i}});
+            }
+        }
+
+        foreach (var babu in babuk) {
+            if (!babu.isOnMap()) continue;
+            int gId = tiles[babu.tileIdx].group;
+            var gr = groups.FirstOrDefault(g=>g.id == gId);
+            if (gr== null) continue;
+            gr.HasBabu = true;
+        }
+
+        var isolatedGroups = groups.Where(g=>!g.HasBabu);
+
+        if (isolatedGroups.Any()) {
+            var idxs = new List<int>();
+            isolatedGroups.SelectMany(g=>g.tileIdxs).ToList().ForEach(i=>  {
+                var tile2 = tiles[idx];
+                tile2.isolated = true;
+                if (tile2.isRemovable()) idxs.Add(i);
+            });
+
+            //if (idxs.Any()) graphics.markIsolatedTiles(idxs);
+        }
+        return true;
+    }
+
+
+    void PropagateGroup(mvTile tile, int newGroupId, int oldMaxGroupId, int idx)
+    {
+        if (tile.group <= oldMaxGroupId && tile.group != newGroupId)
+        {
+            tile.group = newGroupId;
+            //$('#base' + idx).text(newGroupId + ' ' + idx);
+            foreach (int sz in tile.szomszedok) { PropagateGroup(tiles[sz], newGroupId, oldMaxGroupId, sz); }
+            if (tile.isBarlang()) foreach (int sz in barlang) { PropagateGroup(tiles[sz], newGroupId, oldMaxGroupId, sz); }
+        }
+    }
+
+
+    void nextMove()
+    {
+        CurrentPlayerLepes++;
+        if (CurrentPlayerLepes == 2)
+        {
+            SwitchToNextPlayer(true);
+            return;
+        }
+
+        var jatekosHasBabu = playerHasBabu(CurrentPlayerIdx);
+        if (!jatekosHasBabu)
+        {
+            //var nev = currentPlayer.nev;
+            SwitchToNextPlayer(false);
+            //updateBoard(Localizer.playerHasNoBabu(nev));
+        }
+    }
+
+
+        void SwitchToNextPlayer(bool dontRefreshBoard) {
+            var n = CurrentPlayerIdx;
+            bool playerFound = false; 
+            while (!playerFound && ++n != CurrentPlayerIdx)
+            {
+                if (n == players.Count) n = 0;
+            //newPlayer = players[n];
+            playerFound = playerHasBabu(n);
+        }
+
+        if (playerFound)
+            setCurrentPlayer(n);
+        else
+            endPhase();            
+
+        //if (!dontRefreshBoard) updateBoard();
+    }
+
+
+        bool playerHasBabu(short playerIdx)
+        {
+            return babuk.Any(babu => babu.playerIdx == playerIdx && babu.isOnMap());
+        }
+
+        void endPhase()
+        {
+            //if (phase == Phase.Nyar)
+            //    ittATel();
+            //else
+            //    endGame();
+        }
+
+
+    internal mvResponse babuClicked(short id)
+    {
+        var resp = new mvResponse();
+        var babu = babuk.FirstOrDefault(b => b.id == id);
+        if (babu.playerIdx != CurrentPlayerIdx)
+        {
+            resp.AddMsgItem("foreignBabu", GetCurrentPlayerNick(), GetPlayerNick(babu.playerIdx));
+        }
+        else if (lockedOnBabu && babu.id != selectedBabuId)
+            resp.AddMsgItem("notTheLockedBabu", GetCurrentPlayerNick());
+        else
+        {
+            selectedBabuId = babu.id;
+            resp.AddActionItem(ActionKind.SelectBabu, selectedBabuId);
+        }
+        return resp;
+    }
+    #endregion
+
+    public void Init(IEnumerable<IPlayer> _players)
         {
             partyPhase = PartyPhase.InitialSetup;
             this.szabadSzinek = getSzinek().ToList();
             this.players = this.getPlayers(_players).ToList();
+            this.CurrentPlayerIdx = selectedBabuId = -1;
         }
 
         public void StartPlaying()
@@ -181,6 +436,30 @@ namespace mvserver
                     yield return new mvPlayer { Id = _player.Id, Nick = _player.Nick, UserId = _player.UserId, ladak = mvCommon.maxLada, ClientStatus = ClientStatus.Connected };
         }
 
+        //mvPlayer GetCurrentPlayer()
+        //{
+        //    return GetPlayer(CurrentPlayerIdx);
+        //}
+
+        mvPlayer GetPlayer(short playerIdx)
+        {
+            if (playerIdx >= 0 && players != null)
+                return players[playerIdx];
+
+            return null;
+        }
+
+        string GetCurrentPlayerNick()
+        {
+            var cp = GetPlayer(CurrentPlayerIdx);
+            return cp != null ? cp.Nick : String.Empty;
+        }
+
+        string GetPlayerNick(short playerIdx)
+        {
+            var p = GetPlayer(playerIdx);
+            return p != null ? p.Nick : String.Empty;
+        }
         #endregion
     }
 }

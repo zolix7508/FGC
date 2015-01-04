@@ -17,6 +17,8 @@ namespace mvserver
         public List<mvTile> mamutok;
         public List<mvTile> lapkak;
 
+        public bool hasFegyver { get { return fegyverek > 0; } }
+
         public void processLeszedettTile(mvTile tile)
         {
             if (tile.tileKind == TileKind.Fegyver)

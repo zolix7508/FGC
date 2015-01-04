@@ -31,8 +31,16 @@ namespace mvserver
         MoreBabusNotAllowed = -102,
         SameTile = -101,
         Ok = 1,
+        Unknown = 0,
         LockOnBabu = 10
     };
+
+    public enum ActionKind : short
+    {
+        FullStatus = 1,
+        SelectBabu = 2,
+        DrawBabuk = 3
+    }
 
     public class mvCommon
     {

@@ -5,6 +5,7 @@
         nextPlayerMsg: '{0} következik!'
 	},
 	
+    gepNick: 'Gép',
 	askUserName: function(i) { return '{0}. játékos neve?'.format(i);},
 	duplicateUser: function (name) { return '\'{0}\' nevu játékosunk már van!'.format(name); },
 	nextPlayer: function (name, lepes) { return '{0} következik! ({1}. lépés)'.format(name, lepes); },
@@ -16,6 +17,9 @@
 	playerJoined: function (nick) { return '*** {0} belépett.'.format(nick) },
 	playerLeft: function (nick) { return '*** {0} kilépett.'.format(nick) },
 	connStatus: function (online) { return online ? 'Itt van.' : 'Nincs itt.' },
+	notYourTurn: function () { return 'Most nem rajtad van a sor. Hát ez van.' },
+	notLoggedIn: function () { return 'Van egy kis gond. Újra be kéne jelentkezzél. <a href="/Account/Login">Klikk ide!</a>' },
+	notYourParty: function () { return 'Van egy kis gond. Nem ehhez a parthoz vagy bejelentkezve. Ki/be jelentkezéshez <a href="/Account/Login">klikk ide!</a>' },
 
 	playerColorName: function (kod) {
 			switch (kod) {

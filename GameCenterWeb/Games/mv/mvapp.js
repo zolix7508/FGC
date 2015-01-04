@@ -21,8 +21,9 @@ mvApp.controller('boardController', ['$scope', 'mvDataService', function (scope,
         scope.selectedSzin = d.jatekos.Szinkod; //{ kod: d.jatekos.Szinkod, cssClass: scope.szin(d.jatekos.Szinkod) };
         scope.partyPhase = d.partyPhase;
         scope.players = d.players;
+        if (d.players && d.CurrentPlayerIdx >= 0) d.currentPlayer = d.players[d.CurrentPlayerIdx];
         scope.currentPlayer = d.currentPlayer;
-        scope.currentPlayerLepes = d.currentPlayerLepes;
+        scope.currentPlayerLepes = d.CurrentPlayerLepes;
         scope.currentPlayerStr = function () {
             return scope.currentPlayer != null ? Localizer.nextPlayer(scope.currentPlayer.Nick, scope.currentPlayerLepes + 1) : '';
         };

@@ -1,5 +1,5 @@
 
-var ctx, mv;
+var ctx, mv, msgBoard;
 
 var TileKind = {};
 TileKind.Init = 0;
@@ -113,8 +113,10 @@ function App() {
     var barlang = [];
 
     var selectedBabu, currentPlayer, currentPhase, currentPlayerLepes;
+    self.currentPlayer = currentPlayer;
 
     var boardElem, message, processing;
+    var gep = Localizer.gepNick;
 
     self.getData = function (info) {
         return info ? {
@@ -336,16 +338,31 @@ function App() {
         updateBoard();
     }
 
+    self._setCurrentPlayer = function (player) {
+        currentPlayer = player;
+    }
+
     self.setTile = function (idx, tileKind, kindStr) {
         //tiles[idx].tileKind = tileKind;
         graphics.drawTile(idx, tileKind, kindStr);
     };
 
+    self.sendMessage = function(sender, message) {
+        if (message) {
+            formatChatMsg(sender, message);
+            mv.server.sendMessage(message);
+        }
+    }
+
+    function formatChatMsg(sender, message) {
+        return '{0}: {1}'.format(sender, message);
+    }
+
     function allowActions() { processing = false; }
 
     function ongoingAction() {
         if (processing) {
-            updateBoard( Localizer.processingAlready());
+            self.sendMessage( gep, Localizer.processingAlready());
             return true;
         }
         processing = true;
@@ -363,38 +380,44 @@ function App() {
     }
 
     self.action = function (idx) {
-        if (ongoingAction()) return;
-        var result;
-        if (selectedBabu) {
-            if (idx > -1) {
-                result = checkIfValidMove(idx);
-                if (result === true || result == ResultCode.LockOnBabu) {
-                    if (result == ResultCode.LockOnBabu) lockOnBabu();
-                    var oldIdx = selectedBabu.tileIdx;
-                    moveBabuTo(idx);
-                    tileLeft(oldIdx, selectedBabu);
-                    processIfTeliTabor(idx);
-                    nextMove();
-                } else {
-                    message = Localizer.message(result);
-                    updateBoard(message);
-                }
+        if (currentPlayer) {
+            if (currentPlayer.Id == self.mvParty.jatekos.Id) {
+                if (ongoingAction()) return;
+                mv.server.action(idx);
+                //var result;
+                //if (selectedBabu) {
+                //    if (idx > -1) {
+                //        result = checkIfValidMove(idx);
+                //        if (result === true || result == ResultCode.LockOnBabu) {
+                //            if (result == ResultCode.LockOnBabu) lockOnBabu();
+                //            var oldIdx = selectedBabu.tileIdx;
+                //            moveBabuTo(idx);
+                //            tileLeft(oldIdx, selectedBabu);
+                //            processIfTeliTabor(idx);
+                //            nextMove();
+                //        } else {
+                //            message = Localizer.message(result);
+                //            updateBoard(message);
+                //        }
+                //    } else
+                //        result = removeBabu(selectedBabu);
+                //} else if (idx > -1) {
+                //    var tile = tiles[idx];
+                //    if (tile.isRemovable()) {
+                //        if (tile.isolated) {
+                //            removeIsolatedGroup(tile.group);
+                //            result = true;
+                //        }
+                //    }
+                //}
+                //if (!selectedBabu && result == null) {
+                //    message = Localizer.doSomething(currentPlayer.nev);
+                //    updateBoard(message);
+                //}
+                allowActions();
             } else
-                result = removeBabu(selectedBabu);
-        } else if (idx > -1) {
-            var tile = tiles[idx];
-            if (tile.isRemovable()) {
-                if (tile.isolated) {
-                    removeIsolatedGroup(tile.group);
-                    result = true;
-                }
-            }
+                write({ msg: Localizer.notYourTurn() });
         }
-        if (!selectedBabu && result == null) {
-            message = Localizer.doSomething(currentPlayer.nev);
-            updateBoard(message);
-        }
-        allowActions();
     };
 
     function nextMove() {
@@ -625,20 +648,27 @@ function App() {
     self.getSzomszedok = function (idx) { return tiles[idx].szomszedok };
 
     self.selectBabu = function (b) {
-        if (ongoingAction()) return;
         if (currentPlayer) {
-            var babu = babuk[b];
-            if (babu.jatekos != currentPlayer) {
-                updateBoard(Localizer.foreignBabu(currentPlayer.nev, babu.jatekos.nev));
-            } else if (lockedOnBabu && babu!=selectedBabu)
-                updateBoard(Localizer.notTheLockedBabu(currentPlayer.nev));
-            else {
-                deselectCurrentBabu();
-                selectedBabu = babu;
-                graphics.selectBabu(selectedBabu);
-            } 
+            if (currentPlayer.Id == self.mvParty.jatekos.Id) {
+                if (ongoingAction()) return;
+                mv.server.babuClicked(b);
+                /*
+                var babu = babuk[b];
+                if (babu.jatekos != currentPlayer) {
+                    updateBoard(Localizer.foreignBabu(currentPlayer.nev, babu.jatekos.nev));
+                } else if (lockedOnBabu && babu!=selectedBabu)
+                    updateBoard(Localizer.notTheLockedBabu(currentPlayer.nev));
+                else {
+                    deselectCurrentBabu();
+                    selectedBabu = babu;
+                    graphics.selectBabu(selectedBabu);
+                } 
+                */
+                allowActions();
+            } else
+                write({ msg: Localizer.notYourTurn() });
+            
         }
-        allowActions();
     };
 
     function deselectCurrentBabu() {
@@ -646,6 +676,14 @@ function App() {
         graphics.deselectBabu(selectedBabu);
     }
 
+    self.processBabu = function(babuk, id) {
+        if (id >= 0) {
+            var babu;
+            $.each(babuk, function(i, bb) { if (bb.id==id) babu = bb });
+            graphics.selectBabu(babu);
+        } else 
+            graphics.deselectBabu();
+    }
     self.init();
     return self;
 }
@@ -654,8 +692,15 @@ var graphics = new Graphics();
 var app = new App();
 app.init();
 
+function write(content) {
+    var elem = $('<div></div>');
+    if (content.bold) elem.css('font-weight', 'bold');
+    elem.html(content.msg);
+    msgBoard.append(elem);
+}
+
 $(function () {
-    var msgBoard = $('#msgBoard');
+    msgBoard = $('#msgBoard');
     graphics.babuTemplate = getClone('#tmp_babu');
     graphics.ladaTemplate = getClone('#tmp_lada');
 
@@ -706,18 +751,34 @@ $(function () {
         if (app.mvParty.babuk)
             $.each(app.mvParty.babuk, function (b, babu) { if (babu.tileIdx >= 0) graphics.putBabu(babu, babu.tileIdx, app.mvParty.players) });
 
+        if (app.mvParty.players && app.mvParty.CurrentPlayerIdx >= 0)
+            app._setCurrentPlayer(app.mvParty.players[app.mvParty.CurrentPlayerIdx]);
+        else
+            app._setCurrentPlayer(null);
+
+        app.processBabu(app.mvParty.babuk, app.mvParty.selectedBabuId);
         app.updateBoard(app.mvParty);
+
         $('#ddSzin option').each(function (i, x) {
             $(this).addClass(graphics.getSzinClass(x.value));
         });
     };
 
+    mv.client.msg = function (msg) {
+        var prms = JSON.stringify(msg.slice(1));
+        if (prms.length < 2) return;
+        prms = prms.substr(1, prms.length - 2);
+        var m = 'Localizer.{0}({1})'.format(msg[0], prms);
+        msg = eval(m);
+        write({ msg: msg });
+    }
 
-    function write(content) {
-        var elem = $('<div></div>');
-        if (content.bold) elem.css('font-weight', 'bold');
-        elem.text(content.msg);
-        msgBoard.append(elem);
+    mv.client.processBabu = function (id) {
+        app.processBabu(app.mvParty.babuk, id);
+    }
+
+    mv.client.drawBabuk = function (babuk, tileIdx, players) {
+        graphics.drawBabuk(babuk, tileIdx, players);
     }
 
     $('#wrapper').on('click', 'area', function (e) {
