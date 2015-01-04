@@ -13,7 +13,7 @@ namespace GameCenterCore.Contracts
 
         void Save(IParty party);
 
-        ErrorHandling.Results Join(Guid partyId, int userId);
+        ErrorHandling.Results Join(Guid partyId, int userId, out IPlayer player);
         IParty GetById(Guid partyId);
         void Update(IParty party);
 

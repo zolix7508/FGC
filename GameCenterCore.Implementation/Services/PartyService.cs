@@ -39,8 +39,9 @@ namespace GameCenterCore.Implementation.Services
             PartyRepository.Save(party);
         }
 
-        public Results Join(Guid partyId, int userId)
+        public Results Join(Guid partyId, int userId, out IPlayer player)
         {
+            player = null;
             var results = new Results();
             IParty party = this.GetAllJoinable(userId).Where(p => p.Id == partyId).FirstOrDefault();
             if (party != null)
@@ -48,7 +49,7 @@ namespace GameCenterCore.Implementation.Services
                 var players = party.Players.Where(p => p.UserId == userId);
                 if (players.Count() == 1)
                 {
-                    var player = players.ElementAt(0);
+                    player = players.ElementAt(0);
                     results.Add(ResultCode.Undefined, @"\Games\mv\map.html?partyId=" + partyId);
                 }
             }

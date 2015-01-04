@@ -73,3 +73,7 @@ select option:hover {
     position: fixed;
     left: 990px;
 }
+
+#msgBoard div {
+    border-top: solid 1px black;
+}

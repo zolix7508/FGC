@@ -704,6 +704,13 @@ $(function () {
     graphics.babuTemplate = getClone('#tmp_babu');
     graphics.ladaTemplate = getClone('#tmp_lada');
 
+    function setCurrentPlayer() {
+        if (app.mvParty.players && app.mvParty.CurrentPlayerIdx >= 0)
+            app._setCurrentPlayer(app.mvParty.players[app.mvParty.CurrentPlayerIdx]);
+        else
+            app._setCurrentPlayer(null);
+    }
+
     app.start();
 
     //$.connection.hub.url = "/signalr";
@@ -751,10 +758,7 @@ $(function () {
         if (app.mvParty.babuk)
             $.each(app.mvParty.babuk, function (b, babu) { if (babu.tileIdx >= 0) graphics.putBabu(babu, babu.tileIdx, app.mvParty.players) });
 
-        if (app.mvParty.players && app.mvParty.CurrentPlayerIdx >= 0)
-            app._setCurrentPlayer(app.mvParty.players[app.mvParty.CurrentPlayerIdx]);
-        else
-            app._setCurrentPlayer(null);
+        setCurrentPlayer();
 
         app.processBabu(app.mvParty.babuk, app.mvParty.selectedBabuId);
         app.updateBoard(app.mvParty);
@@ -779,6 +783,20 @@ $(function () {
 
     mv.client.drawBabuk = function (babuk, tileIdx, players) {
         graphics.drawBabuk(babuk, tileIdx, players);
+    }
+
+    mv.client.tileRemoved = function (idx, isolatedTiles) {
+        graphics.drawTile(idx, TileKind.Init);
+        if (isolatedTiles && isolatedTiles.length) graphics.markIsolatedTiles(isolatedTiles);
+    }
+
+    mv.client.updateCurrentPlayer = function (players, currentPlayerIdx, currentPlayerLepes) {
+        app.mvParty.players = players;
+        if (app.mvParty.CurrentPlayerIdx != currentPlayerIdx) graphics.deselectBabu();
+        app.mvParty.CurrentPlayerIdx = currentPlayerIdx;
+        app.mvParty.CurrentPlayerLepes = currentPlayerLepes;
+        app.updateBoard(app.mvParty);
+        setCurrentPlayer();
     }
 
     $('#wrapper').on('click', 'area', function (e) {

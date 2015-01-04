@@ -75,15 +75,17 @@ namespace mvserver
                     SelectedBabu.tileIdx = idx;
                     resp.AddActionItem(ActionKind.DrawBabuk, babuk, oldIdx, players);
                     resp.AddActionItem(ActionKind.DrawBabuk, babuk, idx, players);
-                    tileLeft(oldIdx, SelectedBabu);
+                    resp.AddActionItem(ActionKind.SelectBabu, this.selectedBabuId);
+                    List<int> isolatedTiles;
+                    if (tileLeft(oldIdx, SelectedBabu, out isolatedTiles))
+                        resp.AddActionItem(ActionKind.TileRemoved, oldIdx, isolatedTiles);
                     //processIfTeliTabor(idx);
                     nextMove();
+                    resp.AddActionItem(ActionKind.UpdateCurrentPlayer, players, CurrentPlayerIdx, CurrentPlayerLepes);
                 }
                 else
                 {
-                    //message = Localizer.message(result);
-                    //updateBoard(message);
-                    resp.AddMsgItem("message", result);
+                    resp.AddMsgItem("message", result, GetCurrentPlayerNick());
                 }
             }
             else
@@ -109,8 +111,10 @@ namespace mvserver
     {
         var group = groups.FirstOrDefault(g => g.id == groupId);
         if (group != null)
-            group.tileIdxs.ForEach(i => RemoveTile(i, null));
-
+        {
+            List<int> isolatedTiles;
+            group.tileIdxs.ForEach(i => RemoveTile(i, null, out isolatedTiles));
+        }
         //graphics.unmarkIsolatedTiles(group.tileIdxs);
     }
 
@@ -133,7 +137,7 @@ namespace mvserver
         if (targetTile.tileKind == TileKind.Mamut && !GetPlayer(CurrentPlayerIdx).hasFegyver) return ResultCode.NoWeapon;
         if (getBabukCountOnTile(idx, null) > 0 && !targetTile.allowsMoreBabus())
         {
-            if (CurrentPlayerLepes > 0)
+            if (CurrentPlayerLepes == 0)
                 return ResultCode.LockOnBabu;
             else
                 return ResultCode.MoreBabusNotAllowed;
@@ -147,20 +151,23 @@ namespace mvserver
     }
 
 
-    void tileLeft(int idx, mvBabu babu)
+    bool tileLeft(int idx, mvBabu babu, out List<int> isolatedTiles)
     {
         if ( getBabukCountOnTile(idx, babu) == 0 )
         {
             var tile = tiles[idx];
             if (tile.isRemovable()) players[babu.playerIdx].processLeszedettTile(tile);
-            //var tileRemoved = 
-            RemoveTile(idx, tile);
+            var tileRemoved = RemoveTile(idx, tile, out isolatedTiles);
             //if (tileRemoved) players[babu.playerIdx].processLeszedettTile(tile);
+            return tileRemoved;
         }
+        isolatedTiles = null;
+        return false;
     }
 
 
-    bool RemoveTile(int idx, mvTile tile) {
+    bool RemoveTile(int idx, mvTile tile, out List<int> isolatedTiles) {
+        isolatedTiles = null;
         if (tile == null) tile = tiles[idx];
         if (!tile.isRemovable()) return false;
 
@@ -215,7 +222,7 @@ namespace mvserver
                 if (tile2.isRemovable()) idxs.Add(i);
             });
 
-            //if (idxs.Any()) graphics.markIsolatedTiles(idxs);
+            if (idxs.Any()) isolatedTiles = idxs;
         }
         return true;
     }

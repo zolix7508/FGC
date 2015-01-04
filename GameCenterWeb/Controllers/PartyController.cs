@@ -8,6 +8,7 @@ using GameCenterCore.Contracts.Services;
 using GameCenterWeb.Models;
 using GameCenterCore.ErrorHandling;
 using GameCenterCore.Model;
+using AppServer;
 
 namespace GameCenterWeb.Controllers
 {
@@ -34,6 +35,16 @@ namespace GameCenterWeb.Controllers
             }
         }
 
+        IAuthenticationService _AuthenticationService;
+        IAuthenticationService AuthenticationService
+        {
+            get
+            {
+                if (_AuthenticationService == null) _AuthenticationService = Resolve<IAuthenticationService>();
+                return _AuthenticationService;
+            }
+        }
+
         public ActionResult Index()
         {
             var model = PartyService.GetAllJoinable(base.GetCurrentUserId());
@@ -42,13 +53,13 @@ namespace GameCenterWeb.Controllers
 
         public ActionResult Join(Guid partyId)
         {
-            Results results = PartyService.Join(partyId, GetCurrentUserId());
-            if (results.IsOk)
+            IPlayer player = null;
+            var results = PartyService.Join(partyId, GetCurrentUserId(), out player);
+            var principal = User.Identity as CustomIdentity;
+            if (results.IsOk && principal != null)
             {
-                //var userInfo = new UserInfo(User.Identity.Name, partyId);
-                //base.Session.UserInfo = userInfo;
                 var partyUrl = results[0].Context as string;
-                //AuthenticationService.CreateAuthTicket(User.Identity.Name, Guid.Empty, string.Empty, rememberMe, HttpContext.Current.Response);
+                AuthenticationService.CreateAuthTicket(principal.Name, partyId, string.Empty, principal.RememberMe, System.Web.HttpContext.Current.Response, principal.Nick, player.Id);
                 Response.Redirect(partyUrl);
             }
             else

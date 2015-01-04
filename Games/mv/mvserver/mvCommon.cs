@@ -39,7 +39,9 @@ namespace mvserver
     {
         FullStatus = 1,
         SelectBabu = 2,
-        DrawBabuk = 3
+        DrawBabuk = 3,
+        TileRemoved = 4,
+        UpdateCurrentPlayer = 5
     }
 
     public class mvCommon
