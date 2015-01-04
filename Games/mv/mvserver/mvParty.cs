@@ -362,7 +362,8 @@ namespace mvserver
             else if (phase == Phase.Tel) setShuffleTiles<teliKovek>(_teliKovek, arr);
         }
 
-        void setShuffleTiles<T>(T items, IList<int> _tiles) where T:struct {
+        void setShuffleTiles<T>(T items, IList<int> _tiles) where T : struct
+        {
             var fields = typeof(T).GetFields(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
             Type tileKindType = typeof(TileKind);
             var rdm = new Random(DateTime.Now.Millisecond);
@@ -370,28 +371,14 @@ namespace mvserver
             {
                 TileKind tileKind = (TileKind)Enum.Parse(tileKindType, field.Name);
                 int b = (int)field.GetValue(items);
-                if (tileKind != TileKind.Mamut)
+                while (b-- > 0 && _tiles.Count != 0)
                 {
-                    while (b-- > 0 && _tiles.Count != 0)
-                    {
-                        int i = rdm.Next(_tiles.Count);
-                        SetTile(_tiles[i], tileKind);
-                        _tiles.RemoveAt(i);
-                    }
-                }
-                else
-                {
-                    while (b-- > 0 && _tiles.Count != 0)
-                    {
-                        int i = rdm.Next(_tiles.Count);
-                        mvTile oldTile = tiles[_tiles[i]];
-                        var newTile = new mvTilePontos { tileKind = tileKind, group = oldTile.group, isolated = oldTile.isolated, szomszedok = oldTile.szomszedok };
-                        tiles[_tiles[i]] = newTile;
-                        SetTile(_tiles[i], tileKind);
-                        _tiles.RemoveAt(i);
-                    }
+                    int i = rdm.Next(_tiles.Count);
+                    SetTile(_tiles[i], tileKind);
+                    _tiles.RemoveAt(i);
                 }
             }
+            tiles.Where(t=>t.tileKind == TileKind.Mamut).ToList().ForEach(t => t.pont = 3);
         }
 
         void AdjustMapLayout()

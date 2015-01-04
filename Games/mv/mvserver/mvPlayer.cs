@@ -26,7 +26,7 @@ namespace mvserver
             else if (tile.tileKind == TileKind.Mamut)
             {
                 fegyverek--;
-                mamutok.Add(((mvTilePontos)tile).Pont);
+                mamutok.Add(tile.pont);
             }
             else
                 mvLeszedettLapka.Add(lapkak, tile.tileKind);

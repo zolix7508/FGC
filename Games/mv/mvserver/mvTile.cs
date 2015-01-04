@@ -12,6 +12,7 @@ namespace mvserver
         public int group = 1;
         public bool isolated;
         public List<int> szomszedok;
+        //public Dictionary<string, object> attrs;
 
         public bool isRandom()
         {
@@ -39,5 +40,13 @@ namespace mvserver
             tileKind = TileKind.Init;
             //szomszedok = new List<int>();
         }
+
+        public short pont { get; set; }
+
+        //internal void AddAttr(string key, object value)
+        //{
+        //    if (attrs == null) attrs = new Dictionary<string, object>();
+        //    attrs.Add(key, value);
+        //}
     }
 }

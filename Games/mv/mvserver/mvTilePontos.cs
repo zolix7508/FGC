@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace mvserver
 {
-    [Serializable]
-    public class mvTilePontos : mvTile
-    {
-        public short Pont { get; set; }
-    }
+    //[Serializable]
+    //public class mvTilePontos : mvTile
+    //{
+    //    public short Pont { get; set; }
+    //}
 }
