@@ -14,8 +14,8 @@ namespace mvserver
         public int ladak { get; set; }
 
         public byte fegyverek = 0;
-        public List<mvTile> mamutok;
-        public List<mvTile> lapkak;
+        public List<int> mamutok;
+        public List<mvLeszedettLapka> lapkak;
 
         public bool hasFegyver { get { return fegyverek > 0; } }
 
@@ -26,16 +26,16 @@ namespace mvserver
             else if (tile.tileKind == TileKind.Mamut)
             {
                 fegyverek--;
-                mamutok.Add(tile);
+                mamutok.Add(((mvTilePontos)tile).Pont);
             }
             else
-                lapkak.Add(tile);
+                mvLeszedettLapka.Add(lapkak, tile.tileKind);
         }
 
         public mvPlayer()
         {
-            mamutok = new List<mvTile>();
-            lapkak = new List<mvTile>();
+            mamutok = new List<int>();
+            lapkak = new List<mvLeszedettLapka>();
         }
 
     }

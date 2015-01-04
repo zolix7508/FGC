@@ -152,8 +152,10 @@ namespace mvserver
         if ( getBabukCountOnTile(idx, babu) == 0 )
         {
             var tile = tiles[idx];
-            var tileRemoved = RemoveTile(idx, tile);
-            if (tileRemoved) players[babu.playerIdx].processLeszedettTile(tile);
+            if (tile.isRemovable()) players[babu.playerIdx].processLeszedettTile(tile);
+            //var tileRemoved = 
+            RemoveTile(idx, tile);
+            //if (tileRemoved) players[babu.playerIdx].processLeszedettTile(tile);
         }
     }
 
@@ -368,10 +370,26 @@ namespace mvserver
             {
                 TileKind tileKind = (TileKind)Enum.Parse(tileKindType, field.Name);
                 int b = (int)field.GetValue(items);
-                while (b-- > 0 && _tiles.Count != 0 ) {
-                    int i = rdm.Next(_tiles.Count);
-                    SetTile(_tiles[i], tileKind);
-                    _tiles.RemoveAt(i);
+                if (tileKind != TileKind.Mamut)
+                {
+                    while (b-- > 0 && _tiles.Count != 0)
+                    {
+                        int i = rdm.Next(_tiles.Count);
+                        SetTile(_tiles[i], tileKind);
+                        _tiles.RemoveAt(i);
+                    }
+                }
+                else
+                {
+                    while (b-- > 0 && _tiles.Count != 0)
+                    {
+                        int i = rdm.Next(_tiles.Count);
+                        mvTile oldTile = tiles[_tiles[i]];
+                        var newTile = new mvTilePontos { tileKind = tileKind, group = oldTile.group, isolated = oldTile.isolated, szomszedok = oldTile.szomszedok };
+                        tiles[_tiles[i]] = newTile;
+                        SetTile(_tiles[i], tileKind);
+                        _tiles.RemoveAt(i);
+                    }
                 }
             }
         }
