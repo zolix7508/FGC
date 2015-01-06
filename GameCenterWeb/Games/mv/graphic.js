@@ -67,11 +67,9 @@ function Graphics() {
 	    }
 	}
 
-	self.removeBabu = function (babu) {
-	    var babuk = getBabukOnTile(babu.tileIdx);
-	    var n = babuk.indexOf(babu);
-	    if (n>-1) babuk.splice(n,1);
-	    self.drawBabuk(babuk, babu.tileIdx);
+	self.removeBabu = function (babuk, tileIdx, players) {
+	    var babuk = babuk.filter(function (babu) { return babu.tileIdx == tileIdx });
+	    self.drawBabuk(babuk, tileIdx, players);
 	};
 	
 	self.putBabu = function (babu, idx, players) {
@@ -88,8 +86,8 @@ function Graphics() {
 	}
 
 	self.removeBabuFromMap = function (babu) {
-	    self.deselectBabu(babu);
-	    self.removeBabu(babu);
+	    //self.deselectBabu(babu);
+	    //self.removeBabu(babu);
 	    $('[data-babu="' + babu.id + '"]', host).remove();
 	}
 
@@ -97,7 +95,7 @@ function Graphics() {
 	    $('[data-babu],[data-lada]', host).remove();
 	};
 
-	self.drawTile = function (idx, tileKind, kindStr) {
+	self.drawTile = function (idx, tileKind, kindStr, isolated, keepRotation) {
 	    if (!kindStr) kindStr = TileKind.tileKindNames[tileKind - ((tileKind > 6) ? 1 : 0)];
 	    var elem = $('#base' + idx);
 	    switch (tileKind) {
@@ -108,9 +106,13 @@ function Graphics() {
 	            elem.attr('class', 'base6');
 	            break;
 	    };
-	    var rdeg = 'rotate({0}deg)'.format( 60*Math.floor(Math.random() * 6) );
-	    elem.addClass('tile-' + kindStr)
-            .css({ '-webkit-transform': rdeg, '-moz-transform': rdeg, '-ms-transform': rdeg, '-o-transform': rdeg, 'transform': rdeg });
+	    elem.addClass('tile-' + kindStr);
+	    if (!keepRotation) {
+	        var rdeg = 'rotate({0}deg)'.format(60 * Math.floor(Math.random() * 6));
+	        elem.css({ '-webkit-transform': rdeg, '-moz-transform': rdeg, '-ms-transform': rdeg, '-o-transform': rdeg, 'transform': rdeg });
+	    }
+
+	    if (isolated) markIsolatedTile(idx, tileKind != TileKind.Init);
 	};
 
 	self.drawLada = function (tileIdx, szin) {
@@ -124,11 +126,11 @@ function Graphics() {
 	}
 
 	self.markIsolatedTiles = function (tileIdxs) {
-	    markIsolated(tileIdxs, true);
+	    self.markIsolated(tileIdxs, true);
 	};
 
 	self.unmarkIsolatedTiles = function (tileIdxs) {
-	    markIsolated(tileIdxs, false);
+	    self.markIsolated(tileIdxs, false);
 	};
 
 	self.selectBabu = function (babu) {
@@ -140,7 +142,7 @@ function Graphics() {
 	    $('#selectedBabu').hide();
 	};
 
-	function markIsolated(idxs, mark) {
+	self.markIsolated = function(idxs, mark) {
 	    var s = '';
 	    $.each(idxs, function (i, x) { s += ',#base' + x; });
 	    if (s) {
@@ -149,6 +151,12 @@ function Graphics() {
 	        if (mark) s.fadeTo(500, 0.5, function () { s.addClass('isolatedTile') });
 	        else (s.removeClass('isolatedTile').fadeTo(500, 1));
 	    }
+	}
+
+	function markIsolatedTile(idx, mark) {
+	    var elem = $('#base' + idx);
+	    if (mark) elem.fadeTo(500, 0.5, function () { elem.addClass('isolatedTile') });
+	    else (elem.removeClass('isolatedTile').fadeTo(500, 1));
 	}
 
 	$(function () {

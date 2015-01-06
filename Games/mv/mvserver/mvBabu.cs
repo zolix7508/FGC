@@ -12,15 +12,15 @@ namespace mvserver
         public byte id { get; set; }
         public short playerIdx { get; set; }
 
-        public bool isOnMap() { return tileIdx >= 0; }
+        internal bool isOnMap() { return tileIdx >= 0; }
 
-        public void removeFromMap()
+        internal void removeFromMap()
         {
             //graphics.removeBabuFromMap(self);
             tileIdx = -1;
         }
 
-        public void putOnMap()
+        internal void putOnMap()
         {
             //graphics.putBabu(self, tileIdx);
         }

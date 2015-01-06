@@ -17,11 +17,11 @@
 </head>
 <body id="body" style="margin: 0">
     <div id="wrapper">
-        <canvas id="mapcanvas" width="1200" height="990" class="b"></canvas>
+        <canvas id="mapcanvas" width="940" height="960" class="b"></canvas>
         <script>
             app.drawBackGround();
         </script>
-        <img src="images/alap2.bmp" width="1100" height="1800" alt="Planets" usemap="#planetmap" style="position:absolute;left:0; top:0; opacity:0" />
+        <img src="images/alap2.bmp" width="940" height="960" alt="Planets" usemap="#planetmap" style="position:absolute;left:0; top:0; opacity:0" />
         <map name="planetmap">
             <script type="text/javascript">
                 var c = document.getElementById("mapcanvas");
@@ -70,10 +70,15 @@
                                 <td>{{ player.status }}</td>
                             </tr>
                         </table>
-                        <div><a href="javascript:void(0)" data-remove-babu="1">Remove Babu</a></div>
+                        <div id="remove-babu-area"><a href="javascript:void(0)" data-remove-babu="1">Remove Babu</a></div>
                     </div>
                     <div>{{ message }}</div>
                 </div>
+                <div id="error" class="error-area">
+                    <div id="error-text"></div>
+                    Kapcsolódási hiba történt ahogy elnézem. Jó lenne frissíteni az oldalt.
+                </div>
+                <input type="button" value="Frissítés" onclick="location.reload()" />
                 <div id="msgBoard"></div>
             </div>
         </div>

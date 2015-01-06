@@ -41,7 +41,9 @@ namespace mvserver
         SelectBabu = 2,
         DrawBabuk = 3,
         TileRemoved = 4,
-        UpdateCurrentPlayer = 5
+        UpdateCurrentPlayer = 5,
+        RemoveIsolated = 6,
+        RemoveBabu = 7
     }
 
     public class mvCommon

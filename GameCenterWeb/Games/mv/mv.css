@@ -23,7 +23,7 @@ select option:hover {
 
 .tile-NyariTabor:before, .tile-Bogyo:before, .tile-Ut:before, .tile-Gyoker:before, .tile-Fegyver:before, .tile-Korso:before, .tile-Nyaklanc:before,
 .tile-Barlang:before, .tile-Fuszer:before, .tile-Mamut:before, .tile-TeliTabor:before
-{ content: ""; position: absolute; background-size: 100% 100%; z-index:0 }
+{ content: ""; position: absolute; background-size: 100% 100%; z-index:-2 }
 
 .tile-NyariTabor:before { left: 0; top: 0; width:100px; height:87px; background-image: url(images/nyari_tabor.png); }
 .tile-TeliTabor:before { left: 0; top: 0; width:100px; height:87px; background-image: url(images/teli_tabor.png); }
@@ -48,6 +48,7 @@ select option:hover {
     text-align: center;
     padding-top: 0px;
     font-size: 30pt;
+    z-index:-1;
     /*border: 1px solid black;
             opacity:0.2;*/
 }
@@ -56,24 +57,20 @@ select option:hover {
     border: 1px solid black;
 }
 
-.alap-szel {
-    position: absolute;
-    background-image: url(alap-szel.bmp);
-    width: 114px;
-    min-height: 98px;
-    background-size: 100% 100%;
-    text-align: center;
-    padding-top: 0px;
-    font-size: 30pt;
-}
-
 #wrapper { float:left }
 
 #board {
     position: fixed;
     left: 990px;
+    width: 200px;
 }
+
+#msgBoard { height: 400px; overflow:scroll; }
 
 #msgBoard div {
     border-top: solid 1px black;
 }
+
+#error-text { color: red; }
+.error-area { display:none; }
+#remove-babu-area { height: 40px}

@@ -79,6 +79,12 @@ function Jatekos(szin, nev) {
 
 function App() {
     var self = this;
+
+    self.szervizOn;
+
+    self.isRandom = function (tile) { return [TileKind.Hidden, TileKind.NyariTabor, TileKind.TeliTabor].indexOf(tile.tileKind) < 0 };
+    self.isRemovable = function (tile) { return self.isRandom(tile) & [TileKind.Barlang, TileKind.Ut/*, TileKind.Init*/].indexOf(tile.tileKind) < 0 };
+
     self.partyId;
     self.mvParty;
     //self.jatekos = {};
@@ -127,6 +133,13 @@ function App() {
             players: info.players,
             message: info.message,
         } : null;
+    };
+
+    self.szerviz = function () {
+        if (!self.szervizOn) return;
+        $.each(self.mvParty.tiles, function (t, tile) {
+            $('#base' + t).text(tile.group + ' ' + t);
+        })
     };
 
     function updateBoard(info) {
@@ -275,9 +288,11 @@ function App() {
     self.drawMap = function () {
         for (var y = 0; y < self.NY; y++) {
             for (var x = 0; x < self.NX; x++) {
+                var i = y * self.NX + x;
+                if ([4,5,114,120,123,125].indexOf(i) > -1) continue;
                 var x0 = (1 - (y % 2)) * 1.5 * self.R + (3 * self.R * x) + self.R;
                 var y0 = ddy * y + ddy;
-                var i = y * self.NX + x;
+                
                 document.writeln(getH6area(x0, y0, i));
                 h6(x0, y0, u);
             }
@@ -287,9 +302,10 @@ function App() {
     self.drawBackGround = function () {
         for (var y = 0; y < self.NY; y++) {
             for (var x = 0; x < self.NX; x++) {
-                var x0 = (1 - (y % 2)) * 1.5 * self.R + (3 * self.R * x);
-                var y0 = ddy * y;
                 var i = y * self.NX + x;
+                if ([4, 5, 114, 120, 123, 125].indexOf(i) > -1) continue;
+                var x0 = 1+(1 - (y % 2)) * 1.5 * self.R + (3 * self.R * x);
+                var y0 = 1+ddy * y;
                 document.write('<div class="base6" width="' + 2 * self.R + '" heigth="' + 2 * ddy + '" id="base' + i + '" ></div>');
                 $('#base' + i).css({ 'left': x0 + 'px', 'top': y0 + 'px' });
             }
@@ -342,9 +358,9 @@ function App() {
         currentPlayer = player;
     }
 
-    self.setTile = function (idx, tileKind, kindStr) {
+    self.setTile = function (idx, tileKind, kindStr, isolated, keepRotation) {
         //tiles[idx].tileKind = tileKind;
-        graphics.drawTile(idx, tileKind, kindStr);
+        graphics.drawTile(idx, tileKind, kindStr, isolated, keepRotation);
     };
 
     self.sendMessage = function(sender, message) {
@@ -696,13 +712,14 @@ function write(content) {
     var elem = $('<div></div>');
     if (content.bold) elem.css('font-weight', 'bold');
     elem.html(content.msg);
-    msgBoard.append(elem);
+    msgBoard.append(elem).scrollTop(msgBoard[0].scrollHeight - msgBoard[0].clientHeight);
 }
 
 $(function () {
     msgBoard = $('#msgBoard');
     graphics.babuTemplate = getClone('#tmp_babu');
     graphics.ladaTemplate = getClone('#tmp_lada');
+    graphics.deselectBabu();
 
     function setCurrentPlayer() {
         if (app.mvParty.players && app.mvParty.CurrentPlayerIdx >= 0)
@@ -720,6 +737,17 @@ $(function () {
     mv = $.connection.mVHub;
 
     $.connection.hub.qs = "partyId=" + partyId;
+
+    $.connection.hub.error(function (error) {
+        var eelem = $('#error-text');
+        eelem.html(eelem.html() + '<br/>' +  error);
+        $('#error').show();
+    });
+
+    //contosoChatHubProxy.newContosoChatMessage(userName, message)
+    //.fail(function (error) {
+    //    console.log('newContosoChatMessage error: ' + error)
+    //});
 
     mv.client.something = function (a, b, c, d) {
         debugger;
@@ -743,6 +771,8 @@ $(function () {
 
     mv.client.setStatus = function (mvInfo, playerId) {
         if (!playerId) playerId = app.mvParty.jatekos.Id;
+        var prevTiles;
+        if (app.mvParty) prevTiles = app.mvParty.tiles;
         app.mvParty = $.parseJSON(mvInfo);
         if (playerId) {
             $.each(app.mvParty.players, function (i, p) {
@@ -753,7 +783,9 @@ $(function () {
             });
         }
         if (app.mvParty.tiles)
-            $.each(app.mvParty.tiles, function (t, tile) { app.setTile(t, tile.tileKind) });
+            $.each(app.mvParty.tiles, function (t, tile) { 
+                app.setTile(t, tile.tileKind, null, tile.isolated && app.isRemovable(tile), prevTiles && tile.tileKind == prevTiles[t].tileKind);
+            });
 
         if (app.mvParty.babuk)
             $.each(app.mvParty.babuk, function (b, babu) { if (babu.tileIdx >= 0) graphics.putBabu(babu, babu.tileIdx, app.mvParty.players) });
@@ -766,6 +798,8 @@ $(function () {
         $('#ddSzin option').each(function (i, x) {
             $(this).addClass(graphics.getSzinClass(x.value));
         });
+
+        app.szerviz();
     };
 
     mv.client.msg = function (msg) {
@@ -781,13 +815,35 @@ $(function () {
         app.processBabu(app.mvParty.babuk, id);
     }
 
+    mv.client.removeBabu = function (babu) {
+//        app.processBabu(babuk, -1);
+        graphics.removeBabuFromMap(babu);
+        //return;
+        //graphics.drawBabuk(babuk, babu.tileIdx, players);
+        //if (isolatedTiles && isolatedTiles.length) graphics.markIsolatedTiles(isolatedTiles);
+        szerviz();
+    }
+
     mv.client.drawBabuk = function (babuk, tileIdx, players) {
         graphics.drawBabuk(babuk, tileIdx, players);
     }
 
     mv.client.tileRemoved = function (idx, isolatedTiles) {
-        graphics.drawTile(idx, TileKind.Init);
+        if (idx >= 0) {
+            graphics.drawTile(idx, TileKind.Init);
+        }
+        //if (!isolatedTiles || isolatedTiles.indexOf(idx) == -1) 
         if (isolatedTiles && isolatedTiles.length) graphics.markIsolatedTiles(isolatedTiles);
+        szerviz();
+    }
+
+    mv.client.removeIsolated = function (idx, isolatedTiles) {
+        if (isolatedTiles) {
+            graphics.unmarkIsolatedTiles(isolatedTiles);
+            $.each(isolatedTiles, function (t, idx) {
+                graphics.drawTile(idx, TileKind.Init);
+            });
+        }
     }
 
     mv.client.updateCurrentPlayer = function (players, currentPlayerIdx, currentPlayerLepes) {

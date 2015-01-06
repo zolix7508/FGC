@@ -14,28 +14,35 @@ namespace mvserver
         public List<int> szomszedok;
         //public Dictionary<string, object> attrs;
 
-        public bool isRandom()
+        internal bool isRandom()
         {
             return tileKind != TileKind.Hidden && tileKind != TileKind.NyariTabor && tileKind != TileKind.TeliTabor;
         }
 
-        public bool isBarlang() { return tileKind == TileKind.Barlang; }
+        internal bool isBarlang() { return tileKind == TileKind.Barlang; }
 
-        public bool isRemovable()
+        internal bool isRemovable()
         {
             return isRandom() && tileKind != TileKind.Barlang && tileKind != TileKind.Ut && tileKind != TileKind.Init;
         }
 
-        public bool isForBabu() { 
+        // DI stands for Disregard Isolation
+        internal bool isForBabuDI()
+        { 
+            return tileKind != TileKind.Init && tileKind != TileKind.Hidden; 
+        }
+
+        internal bool isForBabu()
+        { 
             return tileKind != TileKind.Init && tileKind != TileKind.Hidden && !isolated; 
         }
 
-        public bool allowsMoreBabus()
+        internal bool allowsMoreBabus()
         {
             return tileKind == TileKind.Barlang || tileKind == TileKind.NyariTabor || tileKind == TileKind.TeliTabor;
         }
 
-        public void Init()
+        internal void Init()
         {
             tileKind = TileKind.Init;
             //szomszedok = new List<int>();

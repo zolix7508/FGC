@@ -32,7 +32,7 @@ namespace mvserver
         {
             get
             {
-                return _items.OfType<mvResponseActionItem>().Any();
+                return _items.OfType<mvResponseActionItem>().Any(x => x.ActionKind != ActionKind.SelectBabu);
             }
         }
 

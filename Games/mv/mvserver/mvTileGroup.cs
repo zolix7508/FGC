@@ -9,7 +9,7 @@ namespace mvserver
     public class mvTileGroup
     {
         public int id { get; set; }
-        public List<int> tileIdxs { get; internal set; }
+        public List<int> tileIdxs { get; set; }
         public bool HasBabu { get; set; }
 
         public mvTileGroup()

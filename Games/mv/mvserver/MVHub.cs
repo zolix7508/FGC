@@ -169,29 +169,36 @@ namespace mvserver
                 Clients.Group(groupName).msg(item.Message);
             }
 
-            if (party != null)
-                foreach (mvResponseActionItem item in items.OfType<mvResponseActionItem>())
+
+            foreach (mvResponseActionItem item in items.OfType<mvResponseActionItem>())
+            {
+                var args = item.Items;
+                switch (item.ActionKind)
                 {
-                    var args = item.Items;
-                    switch (item.ActionKind)
-                    {
-                        case ActionKind.FullStatus:
+                    case ActionKind.FullStatus:
+                        if (party != null)
                             Clients.Group(groupName).setStatus(party.Data);
-                            break;
-                        case ActionKind.SelectBabu:
-                            Clients.Group(groupName).processBabu(args[0]);
-                            break;
-                        case ActionKind.DrawBabuk:
-                            Clients.Group(groupName).drawBabuk(args[0], args[1], args[2]);
-                            break;
-                        case ActionKind.UpdateCurrentPlayer:
-                            Clients.Group(groupName).updateCurrentPlayer(args[0], args[1], args[2]);
-                            break;
-                        case ActionKind.TileRemoved:
-                            Clients.Group(groupName).tileRemoved(args[0], args[1]);
-                            break;
-                    }
+                        break;
+                    case ActionKind.SelectBabu:
+                        Clients.Group(groupName).processBabu(args[0]);
+                        break;
+                    case ActionKind.DrawBabuk:
+                        Clients.Group(groupName).drawBabuk(args[0], args[1], args[2]);
+                        break;
+                    case ActionKind.UpdateCurrentPlayer:
+                        Clients.Group(groupName).updateCurrentPlayer(args[0], args[1], args[2]);
+                        break;
+                    case ActionKind.TileRemoved:
+                        Clients.Group(groupName).tileRemoved(args[0], args[1]);
+                        break;
+                    case ActionKind.RemoveIsolated:
+                        Clients.Group(groupName).removeIsolated(args[0], args[1]);
+                        break;
+                    case ActionKind.RemoveBabu:
+                        Clients.Group(groupName).removeBabu(args[0]);
+                        break;
                 }
+            }
         }
 
         void SendToCaller(mvResponse resp)
