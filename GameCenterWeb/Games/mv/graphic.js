@@ -1,15 +1,12 @@
 function Graphics() {
-    //$("<style type='text/css'> .tile-NyariTabor:before { left: 0; top: 0; width:100px; height:87px; background-image: url(images/nyari_tabor.png); z-index:-1 } </style>").appendTo("head");
     var self = this;
     var babuR = 37;
     var babuRp2 = babuR / 2;
     var babuKorR = 23;
     var ladaKorR = 45, ladaRp2 = ladaKorR / 2;
     var getTileCoords;
-    var getBabukOnTile = 1;
+    var getBabukOnTile;
     var host;
-    var isolatedTiles = [];
-    var timer1;
     self.babuTemplate, self.ladaTemplate;
 	
     self.init = function (_getTileCoords, _getBabukOnTile) {
@@ -80,15 +77,8 @@ function Graphics() {
 	    self.drawBabuk(babuk, idx, players);
 	};
 
-	self.moveBabu = function(babu, idx) {
-	    self.removeBabu(babu);
-	    self.putBabu(babu, idx);
-	}
-
-	self.removeBabuFromMap = function (babu) {
-	    //self.deselectBabu(babu);
-	    //self.removeBabu(babu);
-	    $('[data-babu="' + babu.id + '"]', host).remove();
+	self.removeBabuFromMap = function (babuId) {
+	    $('[data-babu="' + babuId + '"]', host).remove();
 	}
 
 	self.initPhase = function () {

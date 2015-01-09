@@ -127,6 +127,10 @@ namespace mvserver
             }
         }
 
+        public void sendMessage(object message)
+        {
+            Clients.All.messageReceived(message);
+        }
 
         #region Helper Methods
         protected void AddParty(Guid key, mvParty party)
@@ -196,6 +200,12 @@ namespace mvserver
                         break;
                     case ActionKind.RemoveBabu:
                         Clients.Group(groupName).removeBabu(args[0]);
+                        break;
+                    case ActionKind.LadaDeployed:
+                        Clients.Group(groupName).ladaDeployed(args[0], args[1]);
+                        break;
+                    case ActionKind.WinterStart:
+                        Clients.Group(groupName).winterStart(args[0]);
                         break;
                 }
             }

@@ -11,7 +11,7 @@ namespace mvserver
     public class mvPlayer : Player
     {
         public bool szinMehet;
-        public int ladak { get; set; }
+        public List<int> ladak { get; set; }
 
         public byte fegyverek = 0;
         public List<int> mamutok;
@@ -36,6 +36,7 @@ namespace mvserver
         {
             mamutok = new List<int>();
             lapkak = new List<mvLeszedettLapka>();
+            ladak = new List<int>();
         }
 
     }

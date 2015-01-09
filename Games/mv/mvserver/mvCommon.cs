@@ -43,7 +43,9 @@ namespace mvserver
         TileRemoved = 4,
         UpdateCurrentPlayer = 5,
         RemoveIsolated = 6,
-        RemoveBabu = 7
+        RemoveBabu = 7,
+        LadaDeployed = 8,
+        WinterStart = 9
     }
 
     public class mvCommon

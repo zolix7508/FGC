@@ -49,5 +49,19 @@ namespace mvserver
                 return _items.Count == 0;
             }
         }
+
+        public static mvResponse operator +(mvResponse r1, mvResponse r2) {
+            if (r1 == null) return r2;
+            if (r2 == null) return r1;
+            return r1.Add(r2);
+        }
+
+        private mvResponse Add(mvResponse r2)
+        {
+            foreach (var r in r2._items)
+                _items.Add(r);
+
+            return this;
+        }
     }
 }

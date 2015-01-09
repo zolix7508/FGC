@@ -43,8 +43,16 @@ namespace mvserver
             const int Mamut = 3;
             const int Barlang = 5;
         }
-    //var teliKovek = { Bogyo: 30, Gyoker: 18, Fuszer: 5, Irha: 10, Koponya: 10, Fegyver: 3, Mamut: 12 };
-        protected struct teliKovek { }
+
+        protected struct teliKovek {
+            const int Bogyo = 30;
+            const int Gyoker = 18;
+            const int Fuszer = 5;
+            const int Irha = 10;
+            const int Koponya = 10;
+            const int Fegyver = 3;
+            const int Mamut = 12;
+        }
 
     private int N;
     private bool babuIsSelected { get { return selectedBabuId >= 0; } }
@@ -84,10 +92,8 @@ namespace mvserver
                     resp.AddActionItem(ActionKind.DrawBabuk, babuk, idx, players);
                     resp.AddActionItem(ActionKind.SelectBabu, this.selectedBabuId);
                     if (tileLeft(oldIdx, SelectedBabu, out isolatedTiles)) ;
-                       // resp.AddActionItem(ActionKind.TileRemoved, oldIdx, isolatedTiles);
-                    //processIfTeliTabor(idx);
-                    nextMove();
-                    //resp.AddActionItem(ActionKind.UpdateCurrentPlayer, players, CurrentPlayerIdx, CurrentPlayerLepes);
+                    processIfTeliTabor(idx, ref resp);
+                    resp += nextMove();
                     resp.AddActionItem(ActionKind.FullStatus, this);
                 }
                 else
@@ -98,10 +104,9 @@ namespace mvserver
             else
             {
                 var babu = SelectedBabu;
-                isolatedTiles = RemoveBabu(SelectedBabu);
+                isolatedTiles = RemoveBabu(SelectedBabu, ref resp);
                 resp.AddActionItem(ActionKind.FullStatus, this);
-                resp.AddActionItem(ActionKind.RemoveBabu, babu);
-                //resp.AddActionItem(ActionKind.TileRemoved, -1, isolatedTiles);
+                resp.AddActionItem(ActionKind.RemoveBabu, babu.id);
                 result = ResultCode.Ok;
             }
         }
@@ -188,7 +193,7 @@ namespace mvserver
     }
 
 
-    List<int> RemoveBabu(mvBabu babu)
+    List<int> RemoveBabu(mvBabu babu, ref mvResponse resp)
     {
         if (babu == null) return null;
 
@@ -206,7 +211,6 @@ namespace mvserver
         { // tile was not removed.
             var group = groups.FirstOrDefault(g => g.id == tile.group);
 
-            //List<int> idxs = new List<int>();
             bool isolatedGroup = !babuk.Any(_babu => _babu != babu && _babu.isOnMap() && tiles[_babu.tileIdx].group == tile.group);
 
             if (isolatedGroup)
@@ -220,8 +224,6 @@ namespace mvserver
                         gtile.isolated = true;
                         if (gtile.isRemovable()) isolatedTiles.Add(gidx);
                     }
-
-                    //if (isolatedTiles != null) isolatedTiles.Where(ti => tiles[ti].group == group.id);
                 }
                 else
                 {
@@ -233,13 +235,9 @@ namespace mvserver
                     }
                     groups = new List<mvTileGroup>() { new mvTileGroup { id = 1, tileIdxs = isolatedTiles } };
                 }
-                //if (isolatedTiles.Any()) ;// graphics.markIsolatedTiles(idxs);
             }
         }
-        ////selectedBabu = null;
-        ////graphics.removeBabuFromMap(babu);
-        ////babuk.splice(n, 1);
-        nextMove();
+        resp += nextMove();
         return isolatedTiles;
     }
 
@@ -270,21 +268,7 @@ namespace mvserver
                 PropagateGroup(tiles[sz], ++maxGroupId, oldMaxGroupId, sz);
         }
 
-        //PropagateGroup(tile, ++maxGroupId, oldMaxGroupId, idx);
         groups = new List<mvTileGroup>();
-        //for (int i=0; i<tiles.Count; i++) {
-        //    var tile2 = tiles[i];
-        //    if (tile2.isForBabu()) {
-        //        int n = -1;
-        //        for (int g=0; g<groups.Count; g++) {
-        //            if (groups[g].id == tile2.group) { n=g; break; }
-        //        }
-        //        if (n != -1)
-        //            groups[n].tileIdxs.Add(i);
-        //        else
-        //            groups.Add(new mvTileGroup { id = tile2.group, tileIdxs = new List<int>() {i}});
-        //    }
-        //}
 
         for (int i = 0; i < tiles.Count; i++)
         {
@@ -333,26 +317,24 @@ namespace mvserver
     }
 
 
-    void nextMove()
+    mvResponse nextMove()
     {
         CurrentPlayerLepes++;
         if (CurrentPlayerLepes == 2)
         {
-            SwitchToNextPlayer(true);
-            return;
+            return SwitchToNextPlayer(true);
         }
 
         var jatekosHasBabu = playerHasBabu(CurrentPlayerIdx);
         if (!jatekosHasBabu)
         {
-            //var nev = currentPlayer.nev;
-            SwitchToNextPlayer(false);
-            //updateBoard(Localizer.playerHasNoBabu(nev));
+            return SwitchToNextPlayer(false);
         }
+        return null;
     }
 
 
-    void SwitchToNextPlayer(bool dontRefreshBoard)
+    mvResponse SwitchToNextPlayer(bool dontRefreshBoard)
     {
         var n = CurrentPlayerIdx;
         bool playerFound = false;
@@ -367,9 +349,10 @@ namespace mvserver
         if (playerFound)
             setCurrentPlayer(n);
         else
-            endPhase();
+            return endPhase();
 
         //if (!dontRefreshBoard) updateBoard();
+        return null;
     }
 
 
@@ -378,44 +361,66 @@ namespace mvserver
             return babuk.Any(babu => babu.playerIdx == playerIdx && babu.isOnMap());
         }
 
-        void endPhase()
+
+        void processIfTeliTabor(int idx, ref mvResponse resp) {
+        if (phase == Phase.Nyar && teliTabor.IndexOf(idx) > -1) {
+            var tile = tiles[idx];
+            var currentPlayer = players[CurrentPlayerIdx];
+            if (currentPlayer.ladak.IndexOf(idx) == -1)
+            {
+                currentPlayer.ladak.Add(idx);
+                resp.AddActionItem(ActionKind.LadaDeployed, idx, currentPlayer.Szinkod);
+            }
+        }
+    }
+
+
+        mvResponse endPhase()
         {
             if (phase == Phase.Nyar)
-                ittATel();
+                return ittATel();
             else
-                endGame();
+                return endGame();
         }
 
 
-        internal void ittATel() { 
-            return;
+        mvResponse ittATel()
+        {
+            var resp = new mvResponse();
+            babuk = new List<mvBabu>();
             phase = Phase.Tel;
-        groups = new List<mvTileGroup>();
-        babuk = new List<mvBabu>();
-        //graphics.initPhase();
-            /*
-        shuffleTiles();
-        $.each(teliTabor, function (t, tileIdx) {
-            if (tiles[tileIdx].ladak) {
-                players.forEach(function(player) {
-                    if (tile.ladak.indexOf(player)>=0) babuk.push(new Babu(tileIdx, player, player.id));
-                });
-                graphics.drawBabuk(babuk, tileIdx);
+            
+            byte id = 0;
+            var newPlayers = players.Where(p => p.ladak.Any()).ToList();
+            for (short p = 0; p < players.Count(); p++)
+            {
+                //if (!players[p].ladak.Any()) continue;
+                players[p].ladak.ForEach(l => { babuk.Add(new mvBabu { id = id++, playerIdx = p, tileIdx = l }); });
             }
-        });
-        var maxMamut = 0;
-        babuk.forEach(function(babu) {
-            if (!babu.jatekos.mamutPont) {
-                babu.jatekos.mamutok.forEach(function (mamut) { jatekos.mamutPont += mamut.Pont});
-                if (babu.jatekos.mamutPont > maxMamut) { currentPlayer = babu.jatekos }
+            if (newPlayers.Any())
+            {
+                groups = new List<mvTileGroup>();
+                shuffleTiles();
+                CurrentPlayerLepes = 0;
+                short maxMamut = 0;
+                var mamutLapKak = newPlayers.SelectMany(p => p.lapkak.Where(l => l.TileKind == TileKind.Mamut));
+                if (mamutLapKak.Any())
+                    maxMamut = mamutLapKak.Max(m => m.Count);
+                var kezdoPlayers = newPlayers.Where(p => p.lapkak.Max(l => l.Count) == maxMamut);
+                CurrentPlayerIdx = (short)new Random(DateTime.Now.Millisecond).Next(kezdoPlayers.Count());
+                var kezdoPlayer = newPlayers[CurrentPlayerIdx];
+                for (CurrentPlayerIdx = 0; CurrentPlayerIdx < players.Count; CurrentPlayerIdx++)
+                    if (players[CurrentPlayerIdx] == kezdoPlayer) break;
+
+                players.ForEach(p => p.ladak = new List<int>());
+                resp.AddActionItem(ActionKind.WinterStart, this);
             }
-        })
-        currentPlayerLepes = 0;
-        updateBoard();
-             */
+            else
+                resp = endGame();
+            return resp;
         }
 
-        internal void endGame() { }
+        internal mvResponse endGame() { return null; }
 
     internal mvResponse babuClicked(short id)
     {
@@ -442,6 +447,7 @@ namespace mvserver
             this.szabadSzinek = getSzinek().ToList();
             this.players = this.getPlayers(_players).ToList();
             this.CurrentPlayerIdx = selectedBabuId = -1;
+            this.groups = new List<mvTileGroup>();
         }
 
         public void StartPlaying()
@@ -570,7 +576,7 @@ namespace mvserver
         {
             if (players != null)
                 foreach (var _player in players)
-                    yield return new mvPlayer { Id = _player.Id, Nick = _player.Nick, UserId = _player.UserId, ladak = mvCommon.maxLada, ClientStatus = ClientStatus.Connected };
+                    yield return new mvPlayer { Id = _player.Id, Nick = _player.Nick, UserId = _player.UserId, ClientStatus = ClientStatus.Connected };
         }
 
         //mvPlayer GetCurrentPlayer()

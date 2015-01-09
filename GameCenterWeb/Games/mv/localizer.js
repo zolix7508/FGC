@@ -22,6 +22,7 @@
 	//notYourTurnLocal: function () { return 'Most nem rajtad van a sor. Hát ez van.' },
 	notLoggedIn: function () { return 'Van egy kis gond. Újra be kéne jelentkezzél. <a href="/Account/Login">Klikk ide!</a>' },
 	notYourParty: function () { return 'Van egy kis gond. Nem ehhez a parthoz vagy bejelentkezve. Ki/be jelentkezéshez <a href="/Account/Login">klikk ide!</a>' },
+	winterStart: function () { return 'Vége van a nyárnak...<br/>Hűvős szelek járnak<br/>Nagy bánata van a mamutcsordának!'; },
 
 	playerColorName: function (kod) {
 			switch (kod) {

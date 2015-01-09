@@ -24,5 +24,5 @@ function getQueryParam(name) {
 }
 
 function isString(v) {
-    return typeof myVar == 'string' || myVar instanceof String;
+    return typeof v == 'string' || v instanceof String;
 }
