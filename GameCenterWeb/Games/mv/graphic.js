@@ -6,12 +6,14 @@ function Graphics() {
     var ladaKorR = 45, ladaRp2 = ladaKorR / 2;
     var getTileCoords;
     var getBabukOnTile;
+    var isTel;
     var host;
     self.babuTemplate, self.ladaTemplate;
 	
-    self.init = function (_getTileCoords, _getBabukOnTile) {
+    self.init = function (_getTileCoords, _getBabukOnTile, _isTel) {
         getTileCoords = _getTileCoords;
         getBabukOnTile = _getBabukOnTile;
+        isTel = _isTel;
     };
 	
     self.getSzinClass = function(szinkod) {
@@ -96,7 +98,7 @@ function Graphics() {
 	            elem.attr('class', 'base6');
 	            break;
 	    };
-	    elem.addClass('tile-' + kindStr);
+	    elem.addClass('tile-' + (isTel() ? 't' : '') + kindStr);
 	    if (!keepRotation) {
 	        var rdeg = 'rotate({0}deg)'.format(60 * Math.floor(Math.random() * 6));
 	        elem.css({ '-webkit-transform': rdeg, '-moz-transform': rdeg, '-ms-transform': rdeg, '-o-transform': rdeg, 'transform': rdeg });

@@ -112,25 +112,6 @@ function App() {
         mv.server.szinMehet();
     }
 
-    //self.shuffleTiles = function () {
-    //    var arr = [];
-    //    tiles.forEach(function (tile, i) {
-    //        tile.isolated = false;
-    //        if (tile.isRandom()) arr.push(i);
-    //    });
-
-    //    var kovek = currentPhase == Phase.Nyar ? nyariKovek : teliKovek;
-    //    for (var kind in kovek) {
-    //        var tileKindId = eval('TileKind.' + kind);
-    //        var b = kovek[kind];
-    //        while (b-- && arr.length) {
-    //            var i = Math.floor(arr.length * Math.random());
-    //            self.setTile(arr[i], tileKindId, kind);
-    //            arr.splice(i, 1);
-    //        }
-    //    }
-    //};
-
     function getCoords(x0, y0, r) {
         var coords = '';
         for (var i = 0; i < PII; i += u) {
@@ -165,6 +146,8 @@ function App() {
             return babu.tileIdx == tileIdx && babu != excludeBabu;
         });
     }
+
+    function isTel() { return self.mvParty.phase == Phase.Tel }
 
     self.drawMap = function () {
         for (var y = 0; y < self.NY; y++) {
@@ -201,21 +184,12 @@ function App() {
     //}
 
     self.init = function () {
-        graphics.init(getTileCoords, getBabukOnTile);
+        graphics.init(getTileCoords, getBabukOnTile, isTel);
     };
 
     self.start = function () {
         boardElem = $('#board');
     };
-
-    //function setCurrentPlayer(playerIdx) {
-    //    currentPlayer = players[playerIdx];
-    //    currentPlayerLepes = 0;
-    //    lockedOnBabu = false;
-    //    deselectCurrentBabu();
-    //    selectedBabu = null;
-    //    updateBoard();
-    //}
 
     self._setCurrentPlayer = function (player) {
         currentPlayer = player;
@@ -249,16 +223,6 @@ function App() {
         return false;
     }
 
-    //function processIfTeliTabor(idx) {
-    //    if (currentPhase == Phase.Nyar && teliTabor.indexOf(idx) > -1) {
-    //        var tile = tiles[idx];
-    //        if (!tile.ladak || tile.ladak.indexOf(currentPlayer) == -1) {
-    //            if (tile.ladak) tile.ladak.push(currentPlayer); else tile.ladak = [currentPlayer];
-    //            graphics.drawLada(idx, currentPlayer.szin);
-    //        }
-    //    }
-    //}
-
     self.action = function (idx) {
         if (currentPlayer) {
             if (currentPlayer.Id == self.mvParty.jatekos.Id) {
@@ -269,197 +233,6 @@ function App() {
                 write({ msg: Localizer.notYourTurn() });
         }
     };
-
-    //function nextMove() {
-    //    currentPlayerLepes++;
-    //    if (currentPlayerLepes == 2) {
-    //        switchToNextPlayer(true);
-    //        return;
-    //    }
-
-    //    var jatekosHasBabu = playerHasBabu(currentPlayer);
-    //    if (!jatekosHasBabu) {
-    //        var nev = currentPlayer.nev;
-    //        switchToNextPlayer(false);
-    //        updateBoard(Localizer.playerHasNoBabu(nev));
-    //    }
-
-    //    //var sourceTile = tiles[selectedBabu.tileIdx];
-    //    //var validTargetExists = sourceTile.isBarlang() && barlang.length > 1;
-    //    //if (!validTargetExists)
-    //    //    $.each(sourceTile.szomszedok, function (i, tileIdx) {
-    //    //        if (checkIfValidTargetTile(tileIdx, sourceTile, tiles[tileIdx], true)) {
-    //    //            validTargetExists = true;
-    //    //            return false;
-    //    //        }
-    //    //    });
-
-    //    //if (!validTargetExists) {
-    //    //    updateBoard(Localizer.playerHasNoValidTargetTile(currentPlayer.nev));
-    //    //}
-    //}
-
-    //function playerHasBabu(player) {
-    //    var jatekosHasBabu;
-    //    $.each(babuk, function(b, babu) {
-    //        if (babu.jatekos == player && babu.isOnMap()) {
-    //            jatekosHasBabu = true; return false;
-    //        }
-    //    });
-    //    return jatekosHasBabu;
-    //}
-    
-    //function switchToNextPlayer(dontRefreshBoard) {
-    //    var n = players.indexOf(currentPlayer);
-    //    var playerFound, newPlayer;
-    //    while (!playerFound && newPlayer!=currentPlayer) {
-    //        n++;
-    //        if (n == players.length) n=0;
-    //        newPlayer = players[n];
-    //        playerFound = playerHasBabu(newPlayer);
-    //    }
-
-    //    if (newPlayer==currentPlayer) {
-    //        endPhase();
-    //    } else
-    //        setCurrentPlayer(n);
-
-    //    if (!dontRefreshBoard) updateBoard();
-    //}
-
-    //function endPhase() {
-    //    if (currentPhase == Phase.Nyar)
-    //        ittATel();
-    //    else
-    //        endGame();
-    //}
-
-    //function ittATel() {
-    //    currentPhase = Phase.Tel;
-    //    groups = [];
-    //    babuk = [];
-    //    graphics.initPhase();
-    //    self.shuffleTiles();
-    //    $.each(teliTabor, function (t, tileIdx) {
-    //        if (tiles[tileIdx].ladak) {
-    //            players.forEach(function(player) {
-    //                if (tile.ladak.indexOf(player)>=0) babuk.push(new Babu(tileIdx, player, player.id));
-    //            });
-    //            graphics.drawBabuk(babuk, tileIdx);
-    //        }
-    //    });
-    //    var maxMamut = 0;
-    //    babuk.forEach(function(babu) {
-    //        if (!babu.jatekos.mamutPont) {
-    //            babu.jatekos.mamutok.forEach(function (mamut) { jatekos.mamutPont += mamut.Pont});
-    //            if (babu.jatekos.mamutPont > maxMamut) { currentPlayer = babu.jatekos }
-    //        }
-    //    })
-    //    currentPlayerLepes = 0;
-    //    updateBoard();
-    //}
-
-    //function tileLeft(idx, babu) {
-    //    var babuk = getBabukOnTile(idx, babu);
-    //    if (!babuk.length) {
-    //        var tile = tiles[idx];
-    //        var tileRemoved = self.removeTile(idx, tile);
-    //        if (tileRemoved) babu.jatekos.processLeszedettTile(tile);
-    //    }
-    //}
-
-    //function checkIfValidMove(idx, dontCheckSzomszeds) {
-    //    if (!selectedBabu) return ResultCode.BabuNotSelected;
-    //    if (idx == -1) return true;
-    //    var sourceTile = tiles[selectedBabu.tileIdx];
-    //    targetTile = tiles[idx];
-    //    if (sourceTile == targetTile) return ResultCode.SameTile;
-    //    return checkIfValidTargetTile(idx, sourceTile, targetTile);
-    //}
-
-    //function checkIfValidTargetTile(idx, sourceTile, targetTile, dontCheckSzomszeds) {
-    //    if (!targetTile.isForBabu()) return ResultCode.InvalidTile;
-    //    if (sourceTile.isBarlang() && targetTile.isBarlang()) return true;
-    //    if (!dontCheckSzomszeds && targetTile.szomszedok.indexOf(selectedBabu.tileIdx) == -1) return ResultCode.NotSzomszedTile;
-    //    if (targetTile == TileKind.Mamut && !currentPlayer.hasFegyver()) return ResultCode.NoWeapon;
-    //    var destBabuk = getBabukOnTile(idx);
-    //    if (destBabuk.length && !targetTile.allowsMoreBabus()) {
-    //        if (!currentPlayer.currentLepes)
-    //            return ResultCode.LockOnBabu;
-    //        else
-    //            return ResultCode.MoreBabusNotAllowed;
-    //    }
-    //    return true;
-    //}
-
-    //function lockOnBabu() {
-    //    lockedOnBabu = true;
-    //}
-
-    //function removeIsolatedGroup(groupId) {
-    //    $.each(groups, function (g, group) {
-    //        if (group.id == groupId) {
-    //            $.each(group.tileIdxs, function (t, idx) { self.removeTile(idx) });
-    //            graphics.unmarkIsolatedTiles(group.tileIdxs);
-    //            return false;
-    //        }
-    //    });
-    //}
-
-    //self.removeTile = function (idx, tile) {
-    //    if (!tile) tile = tiles[idx];
-    //    if (!tile.isRemovable()) return false;
-
-    //    $.each(tile.szomszedok, function (i, sz) {
-    //        $.each(tiles[sz].szomszedok, function (j, szsz) {
-    //            if (szsz == idx) {
-    //                tiles[sz].szomszedok.splice(j, 1); return false;
-    //            }
-    //        });
-    //    });
-
-    //    self.setTile(idx, TileKind.Init);
-
-    //    if (tile.isolated) return;
-
-    //    oldMaxGroupId = maxGroupId;
-    //    $.each(tile.szomszedok, function (i, sz) {
-    //        if (tiles[sz].group <= oldMaxGroupId)
-    //            propagateGroup(tiles[sz], ++maxGroupId, oldMaxGroupId, sz);
-    //    });
-
-    //    groups = [];
-    //    $.each(tiles, function (i, tile) {
-    //        if (tile.isForBabu()) {
-    //            var n = -1;
-    //            $.each(groups, function (g, group) { if (group.id == tile.group) { n = g; return false } })
-    //            if (n != -1)
-    //                groups[n].tileIdxs.push(i);
-    //            else
-    //                groups.push({ id: tile.group, tileIdxs: [i] });
-    //        }
-    //    });
-
-    //    $.each(babuk, function (b, babu) {
-    //        if (babu.tileIdx < 0) return true;
-    //        var gId = tiles[babu.tileIdx].group;
-    //        $.each(groups, function (g, group) { if (group.id == gId) { group.hasBabu = true; return false } });
-    //    });
-
-    //    var isolatedGroups = groups.filter(function (group, g) { return !group.hasBabu });
-
-    //    if (isolatedGroups.length) {
-    //        var idxs = [];
-    //        $.each(isolatedGroups, function (g, group) {
-    //            idxs = idxs.concat(group.tileIdxs.filter(function (idx, t) {
-    //                tiles[idx].isolated = true;
-    //                return tiles[idx].isRemovable()
-    //            }))
-    //        });
-    //        if (idxs.length) graphics.markIsolatedTiles(idxs);
-    //    }
-    //    return true;
-    //};
 
     self.selectBabu = function (b) {
         if (currentPlayer) {

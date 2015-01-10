@@ -22,20 +22,31 @@ select option:hover {
 .tile-NyariTabor, .tile-TeliTabor { width: 100px; height: 87px; position:absolute;}
 
 .tile-NyariTabor:before, .tile-Bogyo:before, .tile-Ut:before, .tile-Gyoker:before, .tile-Fegyver:before, .tile-Korso:before, .tile-Nyaklanc:before,
-.tile-Barlang:before, .tile-Fuszer:before, .tile-Mamut:before, .tile-TeliTabor:before
+.tile-Barlang:before, .tile-Fuszer:before, .tile-Mamut:before, .tile-TeliTabor:before,
+.tile-tBogyo:before, .tile-tGyoker:before, .tile-tFegyver:before, .tile-tIrha:before, .tile-tKoponya:before,
+.tile-tFuszer:before, .tile-tMamut:before,
+.tile-tNyariTabor:before, .tile-tUt:before, .tile-tTeliTabor:before, .tile-tBarlang:before
 { content: ""; position: absolute; background-size: 100% 100%; z-index:-2 }
 
-.tile-NyariTabor:before { left: 0; top: 0; width:100px; height:87px; background-image: url(images/nyari_tabor.png); }
-.tile-TeliTabor:before { left: 0; top: 0; width:100px; height:87px; background-image: url(images/teli_tabor.png); }
+.tile-NyariTabor:before, .tile-tNyariTabor:before { left: 0; top: 0; width:100px; height:87px; background-image: url(images/nyari_tabor.png); }
+.tile-TeliTabor:before, .tile-tTeliTabor:before { left: 0; top: 0; width:100px; height:87px; background-image: url(images/teli_tabor.png); }
 .tile-Bogyo:before { left:5px; top: 1px; width:90px; height:85px; background-image: url(images/bogyo.png); }
-.tile-Ut:before { left:5px; top: 1px; width:90px; height:85px; background-image: url(images/ut.png); }
+.tile-Ut:before, .tile-tUt:before { left:5px; top: 1px; width:90px; height:85px; background-image: url(images/ut.png); }
 .tile-Gyoker:before { left:5px; top: 1px; width:90px; height:85px; background-image: url(images/gyoker.png); }
 .tile-Fegyver:before { left:5px; top: 1px; width:90px; height:85px; background-image: url(images/fegyver.png); }
 .tile-Korso:before { left:4px; top: 1px; width:90px; height:85px; background-image: url(images/korso.png); }
 .tile-Nyaklanc:before { left:6px; top: -2px; width:90px; height:90px; background-image: url(images/nyaklanc.png); }
-.tile-Barlang:before { left:6px; top: -2px; width:90px; height:90px; background-image: url(images/barlang.png); }
+.tile-Barlang:before, .tile-tBarlang:before { left:6px; top: -2px; width:90px; height:90px; background-image: url(images/barlang.png); }
 .tile-Fuszer:before { left:6px; top: -2px; width:90px; height:90px; background-image: url(images/fuszer.png); }
 .tile-Mamut:before { left:6px; top: -2px; width:90px; height:90px; background-image: url(images/mamut.png); }
+
+.tile-tBogyo:before { left:5px; top: 1px; width:90px; height:85px; background-image: url(images/bogyo_t.png); }
+.tile-tGyoker:before { left:5px; top: 1px; width:90px; height:85px; background-image: url(images/gyoker_t.png); }
+.tile-tFegyver:before { left:5px; top: 1px; width:90px; height:85px; background-image: url(images/fegyver_t.png); }
+.tile-tIrha:before { left:4px; top: 1px; width:90px; height:85px; background-image: url(images/irha_t.png); }
+.tile-tKoponya:before { left:6px; top: -2px; width:90px; height:90px; background-image: url(images/koponya_t.png); }
+.tile-tFuszer:before { left:6px; top: -2px; width:90px; height:90px; background-image: url(images/fuszer_t.png); }
+.tile-tMamut:before { left:6px; top: -2px; width:90px; height:90px; background-image: url(images/mamut_t.png); }
 
 .isolatedTile { opacity: 0.4 }
 

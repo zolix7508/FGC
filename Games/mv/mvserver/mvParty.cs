@@ -105,8 +105,11 @@ namespace mvserver
             {
                 var babu = SelectedBabu;
                 isolatedTiles = RemoveBabu(SelectedBabu, ref resp);
-                resp.AddActionItem(ActionKind.FullStatus, this);
-                resp.AddActionItem(ActionKind.RemoveBabu, babu.id);
+                if (!resp.GetItems().OfType<mvResponseActionItem>().Any(i => i.ActionKind == ActionKind.WinterStart))
+                {
+                    resp.AddActionItem(ActionKind.FullStatus, this);
+                    resp.AddActionItem(ActionKind.RemoveBabu, babu.id);
+                }
                 result = ResultCode.Ok;
             }
         }
@@ -401,6 +404,7 @@ namespace mvserver
             {
                 groups = new List<mvTileGroup>();
                 shuffleTiles();
+                setSzomszedok();
                 CurrentPlayerLepes = 0;
                 short maxMamut = 0;
                 var mamutLapKak = newPlayers.SelectMany(p => p.lapkak.Where(l => l.TileKind == TileKind.Mamut));
@@ -490,7 +494,7 @@ namespace mvserver
             for (int i = 0; i < tiles.Count; i++)
             {
                 tiles[i].isolated = false;
-                if (tiles[i].isRandom()) arr.Add(i);
+                if (tiles[i].tileKind == TileKind.Init) arr.Add(i);
             }
 
             nyariKovek _nyariKovek;
