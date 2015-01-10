@@ -425,7 +425,64 @@ namespace mvserver
             return resp;
         }
 
-        internal mvResponse endGame() { return null; }
+        internal mvResponse endGame()
+        {
+            var resp = new mvResponse();
+            resp.AddActionItem(ActionKind.GameEnd, GetPlayerResults());
+            return resp;
+        }
+
+        internal IEnumerable<mvPlayerResult> GetPlayerResults()
+        {
+            foreach (var player in players)
+            {
+                var cntBogyo = getCount(player.lapkak, TileKind.Bogyo);
+                var cntGyoker = getCount(player.lapkak, TileKind.Gyoker);
+                var cntFuszer = getCount(player.lapkak, TileKind.Fuszer);
+
+                var cntKorso = getCount(player.lapkak, TileKind.Korso);
+                var cntNyaklanc = getCount(player.lapkak, TileKind.Nyaklanc);
+                var cntIrha = getCount(player.lapkak, TileKind.Irha);
+                var cntKoponya = getCount(player.lapkak, TileKind.Koponya);
+
+                var playerResult = new mvPlayerResult
+                {
+                    Nick = player.Nick,
+                    Szinkod = player.Szinkod,
+                    Points = new List<mvResultItem>()
+                };
+
+                if (cntBogyo > 0) playerResult.Points.Add(new mvResultItem { TileKind = TileKind.Bogyo, Cnt = cntBogyo, Pont = 1 });
+                if (cntGyoker > 0) playerResult.Points.Add(new mvResultItem { TileKind = TileKind.Gyoker, Cnt = cntGyoker, Pont = 2 });
+                if (cntFuszer > 0) playerResult.Points.Add(new mvResultItem { TileKind = TileKind.Fuszer, Cnt = cntFuszer, Pont = 3 });
+
+                if (cntKorso > 0) playerResult.Points.Add(new mvResultItem { TileKind = TileKind.Korso, Cnt = cntKorso, Pont = getAruPont(cntKorso) });
+                if (cntNyaklanc > 0) playerResult.Points.Add(new mvResultItem { TileKind = TileKind.Nyaklanc, Cnt = cntNyaklanc, Pont = getAruPont(cntNyaklanc) });
+                if (cntIrha > 0) playerResult.Points.Add(new mvResultItem { TileKind = TileKind.Irha, Cnt = cntIrha, Pont = getAruPont(cntIrha) });
+                if (cntKoponya > 0) playerResult.Points.Add(new mvResultItem { TileKind = TileKind.Koponya, Cnt = cntKoponya, Pont = getAruPont(cntKoponya) });
+
+                player.mamutok.OrderByDescending(m => m).GroupBy(m => m).ToList().ForEach(x =>
+                    playerResult.Points.Add(new mvResultItem { TileKind = TileKind.Mamut, Cnt = x.Count(), Pont=x.Key })
+                    );
+
+                var cntLada = player.ladak.Count();
+                if (cntLada > 0)
+                    playerResult.Points.Add(new mvResultItem { TileKind = TileKind.Init, Cnt = cntLada, Pont = 5 });
+
+                yield return playerResult;
+            }
+        }
+
+        internal int getCount(IEnumerable<mvLeszedettLapka> lapkak, TileKind tileKind)
+        {
+            return lapkak.Where(l=>l.TileKind == tileKind).Sum(l=>l.Count);
+        }
+
+        internal int getAruPont(int cnt)
+        {
+            if (cnt < 6) return cnt * (cnt + 1) / 2;
+            else return 20;
+        }
 
     internal mvResponse babuClicked(short id)
     {

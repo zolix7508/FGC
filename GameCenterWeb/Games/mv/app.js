@@ -33,8 +33,6 @@ function App() {
 
     self.partyId;
     self.mvParty;
-    //self.jatekos = {};
-
 
     self.R = 50;
     self.NX = 6;
@@ -42,26 +40,10 @@ function App() {
 
     var PII = 2 * Math.PI - 0.001;
     var u = Math.PI / 3;
-    //var ddx = self.R * Math.cos(u);
     var ddy = self.R * Math.sin(u);
-    //self.ddy = ddy;
-
-    //var nyar = true;
-    //var babuk = [];
-
-    //var hdn = [4, 5, 114, 120, 123, 125];
-    //var nyariTabor = [19, 84, 35, 112];
-    //var teliTabor = [56, 98, 21, 70];
-
-    //var nyariKovek = { Bogyo: 30, Ut: 19, Gyoker: 18, Fuszer: 5, Korso: 10, Nyaklanc: 10, Fegyver: 12, Mamut: 3, Barlang: 5 };
-    //var teliKovek = { Bogyo: 30, Gyoker: 18, Fuszer: 5, Irha: 10, Koponya: 10, Fegyver: 3, Mamut: 12 };
-    //var barlang = [];
-
-    //var selectedBabu;
+    
     var currentPlayer;
-    //var currentPhase, currentPlayerLepes;
-    //self.currentPlayer = currentPlayer;
-
+    
     var boardElem, processing;
     var gep = Localizer.gepNick;
 
@@ -176,13 +158,6 @@ function App() {
         }
     };
 
-    //self.adjustMapLayout = function () {
-    //    hdn.map(function (idx) { self.setTile(idx, TileKind.Hidden) });
-    //    nyariTabor.map(function (idx) { self.setTile(idx, TileKind.NyariTabor, 'NyariTabor') });
-    //    teliTabor.map(function (idx) { self.setTile(idx, TileKind.TeliTabor, 'TeliTabor') });
-    //    setSzomszedok();
-    //}
-
     self.init = function () {
         graphics.init(getTileCoords, getBabukOnTile, isTel);
     };
@@ -253,6 +228,7 @@ function App() {
         } else 
             graphics.deselectBabu();
     }
+
     self.init();
     return self;
 }
@@ -432,6 +408,19 @@ $(function () {
         write(message);
     }
 
+    mv.client.allas = function (results) {
+        var sc = angular.element('#results').scope();
+        if (sc) {
+            sc.$apply(function () {
+                sc.playerResults = results;
+            });
+        }
+    }
+
+    mv.client.endGame = function (playerResults) {
+        mv.client.allas(playerResults);
+    }
+
     $('#wrapper').on('click', 'area', function (e) {
         var tileIdx = $(this).data('tile-id');
         app.action(tileIdx);
@@ -444,6 +433,10 @@ $(function () {
 
     $('#board').on('click', '[data-remove-babu]', function (e) {
         app.action(-1);
+    });
+
+    $('#btnAllas').on('click', function (e) {
+        mv.server.getAllas();
     });
 
 });

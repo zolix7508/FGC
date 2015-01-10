@@ -2,7 +2,9 @@
 	messages: {
 		howManyUsers : 'Hány játékos lesz? (2-4)',
 		invalidUserName: 'Érvénytelen játékosnév!',
-        nextPlayerMsg: '{0} következik!'
+		nextPlayerMsg: '{0} következik!',
+		points: 'p.',
+        um: 'drb'
 	},
 	
     gepNick: 'Gép',

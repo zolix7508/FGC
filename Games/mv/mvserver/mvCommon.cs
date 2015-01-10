@@ -45,7 +45,8 @@ namespace mvserver
         RemoveIsolated = 6,
         RemoveBabu = 7,
         LadaDeployed = 8,
-        WinterStart = 9
+        WinterStart = 9,
+        GameEnd = 10
     }
 
     public class mvCommon

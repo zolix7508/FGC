@@ -43,3 +43,22 @@ mvApp.controller('boardController', ['$scope', 'mvDataService', function (scope,
     }
     //scope.exData( mvDataService.getData());
 }]);
+
+mvApp.controller('partyResultsController', ['$scope', 'mvDataService', function (scope, mvDataService) {
+    scope.display = function (item) {
+        if ([TileKind.Korso, TileKind.Nyaklanc, TileKind.Irha, TileKind.Koponya].indexOf(item.TileKind) == -1) {
+            return '{0} x {1} = {2} {3}'.format(item.Cnt, item.Pont, item.Cnt * item.Pont, Localizer.messages.points);
+        } else
+            return '{0} {1} = {2} {3}'.format(item.Cnt, Localizer.messages.um, item.Pont, Localizer.messages.points);
+    };
+
+    scope.tileImgFileName = function (tileKind) {
+        switch (tileKind) {
+            case TileKind.Irha: return "irha_t";
+            case TileKind.Koponya: return "koponya_t";
+            case TileKind.Init: return "lada";
+            default:
+                return TileKind.tileKindNames[tileKind - ((tileKind > 6) ? 1 : 0)];
+        }
+    };
+}]);

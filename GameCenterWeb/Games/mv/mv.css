@@ -14,6 +14,8 @@
 .lada_s, .szin_s { background-color: yellow }
 .szin_0 { background-color: white }
 
+.playerSelectedSzin { height: 17px}
+
 select option:hover {
         box-shadow: 0 0 10px 100px #1882A8 inset;
    }
@@ -73,7 +75,7 @@ select option:hover {
 #board {
     position: fixed;
     left: 990px;
-    width: 200px;
+    min-width: 200px;
 }
 
 #msgBoard { height: 400px; overflow:scroll; }
@@ -89,3 +91,6 @@ select option:hover {
 .playerTile { width: 40px}
 .playerTile-wr { float: left }
 .playerTile-cnt { text-align:center; font-weight:bold }
+
+.playerResultItem { float: left}
+.playerResultItem-img {width: 50px}

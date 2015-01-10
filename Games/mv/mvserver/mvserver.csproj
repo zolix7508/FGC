@@ -65,10 +65,12 @@
     <Compile Include="mvOptions.cs" />
     <Compile Include="mvParty.cs" />
     <Compile Include="mvPlayer.cs" />
+    <Compile Include="mvPlayerResult.cs" />
     <Compile Include="mvResponse.cs" />
     <Compile Include="mvResponseActionItem.cs" />
     <Compile Include="mvResponseItemBase.cs" />
     <Compile Include="mvResponseMsgItem.cs" />
+    <Compile Include="mvResultItem.cs" />
     <Compile Include="mvSzin.cs" />
     <Compile Include="mvTile.cs" />
     <Compile Include="mvTileGroup.cs" />

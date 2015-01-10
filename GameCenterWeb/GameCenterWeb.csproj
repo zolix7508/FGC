@@ -324,6 +324,7 @@
     <Content Include="Games\mv\map.html" />
     <Content Include="Games\mv\mv.css" />
     <Content Include="Games\mv\mvapp.js" />
+    <Content Include="Games\mv\results.html" />
     <Content Include="Games\mv\turtle.js" />
     <Content Include="Games\mv\util.js" />
     <Content Include="Global.asax" />

@@ -45,7 +45,7 @@
                 <div>{{ currentPlayerStr() }}</div>
                 <div ng-switch="partyPhase">
                     <div ng-switch-when="1">
-                        PH 1
+                        Színválasztás folyamatban!
                         <table>
                             <tr ng-repeat="player in players">
                                 <td>{{ player.Nick }}</td>
@@ -56,8 +56,7 @@
                                         <div>{{ selectedSzin }}</div>
                                         <input type="button" value="Mehet" ng-click="mehet()" />
                                     </div>
-                                    <div ng-if="!isThisClient(player.Id) || player.szinMehet" class="animate-if" ng-class="szin(player.Szinkod.toString())">
-                                        KUTTYA
+                                    <div ng-if="!isThisClient(player.Id) || player.szinMehet" class="animate-if playerSelectedSzin" ng-class="szin(player.Szinkod.toString())">
                                     </div>
                                 </td>
                             </tr>
@@ -88,7 +87,7 @@
                                 </td>
                             </tr>
                         </table>
-                        <div id="remove-babu-area"><a href="javascript:void(0)" data-remove-babu="1">Remove Babu</a></div>
+                        <div id="remove-babu-area"><a href="javascript:void(0)" data-remove-babu="1">Babu Levétel</a></div>
                     </div>
                     <div>{{ message }}</div>
                 </div>
@@ -97,6 +96,8 @@
                     Kapcsolódási hiba történt ahogy elnézem. Jó lenne frissíteni az oldalt.
                 </div>
                 <input type="button" value="Frissítés" onclick="location.reload()" />
+                <input type="button" value="Állás" id="btnAllas" />
+                <div ng-include="'/Games/mv/results.html'"></div>
                 <div id="msgBoard"></div>
             </div>
         </div>

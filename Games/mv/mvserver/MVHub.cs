@@ -83,6 +83,16 @@ namespace mvserver
             SendResponse(resp, party);
         }
 
+        public void GetAllas()
+        {
+            mvParty mvp = mvPartik[user.PartyId];
+            var resp = CheckCurrentPlayer(mvp);
+            if (resp.isEmpty)
+            {
+                Clients.Caller.allas(mvp.GetPlayerResults());
+            }
+        }
+
         public void szinSelected(byte kod)
         {
             //var szin = mvSzin.GetSzin(kod);
@@ -206,6 +216,9 @@ namespace mvserver
                         break;
                     case ActionKind.WinterStart:
                         Clients.Group(groupName).winterStart(args[0]);
+                        break;
+                    case ActionKind.GameEnd:
+                        Clients.Group(groupName).endGame(args[0]);
                         break;
                 }
             }
