@@ -40,13 +40,13 @@ select option:hover {
 .tile-Fuszer:before { left:6px; top: -2px; width:90px; height:90px; background-image: url(images/fuszer.png); }
 .tile-Mamut:before { left:6px; top: -2px; width:90px; height:90px; background-image: url(images/mamut.png); }
 
-.tile-tBogyo:before { left:5px; top: 1px; width:90px; height:85px; background-image: url(images/bogyo_t.png); }
-.tile-tGyoker:before { left:5px; top: 1px; width:90px; height:85px; background-image: url(images/gyoker_t.png); }
-.tile-tFegyver:before { left:5px; top: 1px; width:90px; height:85px; background-image: url(images/fegyver_t.png); }
-.tile-tIrha:before { left:4px; top: 1px; width:90px; height:85px; background-image: url(images/irha_t.png); }
-.tile-tKoponya:before { left:6px; top: -2px; width:90px; height:90px; background-image: url(images/koponya_t.png); }
-.tile-tFuszer:before { left:6px; top: -2px; width:90px; height:90px; background-image: url(images/fuszer_t.png); }
-.tile-tMamut:before { left:6px; top: -2px; width:90px; height:90px; background-image: url(images/mamut_t.png); }
+.tile-tBogyo:before { left:8px; top: 1px; width:84px; height:84px; background-image: url(images/bogyo_t.png); }
+.tile-tGyoker:before { left:8px; top: 2px; width:83px; height:83px; background-image: url(images/gyoker_t.png); }
+.tile-tFegyver:before { left:8px; top: 2px; width:83px; height:83px; background-image: url(images/fegyver_t.png); }
+.tile-tIrha:before { left:8px; top: 2px; width:83px; height:83px; background-image: url(images/irha_t.png); }
+.tile-tKoponya:before { left:8px; top: 2px; width:83px; height:83px; background-image: url(images/koponya_t.png); }
+.tile-tFuszer:before { left:8px; top: 2px; width:83px; height:83px; background-image: url(images/fuszer_t.png); }
+.tile-tMamut:before { left:8px; top: 2px; width:83px; height:83px; background-image: url(images/mamut_t.png); }
 
 .isolatedTile { opacity: 0.4 }
 
