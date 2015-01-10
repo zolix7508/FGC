@@ -308,6 +308,7 @@
     <Content Include="Games\mv\images\irha_t.png" />
     <Content Include="Games\mv\images\koponya_t.png" />
     <Content Include="Games\mv\images\korso.png" />
+    <Content Include="Games\mv\images\lada.png" />
     <Content Include="Games\mv\images\mamut.png" />
     <Content Include="Games\mv\images\mamut_t.png" />
     <Content Include="Games\mv\images\nyaklanc.png" />

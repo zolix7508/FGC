@@ -1,0 +1,17 @@
+﻿<div id="results" ng-controller="partyResultsController">
+    <table>
+        <tr ng-repeat="playerResult in playerResults">
+            <td>
+                <div>{{ playerResult.Nick }}</div>
+            </td>
+
+            <td ng-repeat="points in playerResult.Points" class="playerResultItem">
+                <img src="/Games/mv/images/{{tileImgFileName(points.TileKind)}}.png" class="playerResultItem-img" />
+                <div>{{ display(points) }}</div>
+            </td>
+            <td>
+                <strong>{{ playerResult.TotalPoints }}</strong>
+            </td>
+        </tr>
+    </table>
+</div>
