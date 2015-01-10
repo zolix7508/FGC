@@ -66,8 +66,26 @@
                     <div ng-switch-when="2">
                         <table>
                             <tr ng-repeat="player in players">
-                                <td>{{ player.nev }}</td>
-                                <td>{{ player.status }}</td>
+                                <td>
+                                    <table>
+                                        <tr>
+                                            <td>{{ player.Nick }}</td>
+                                            <td>{{ player.status }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">
+                                                <div class="playerTile-wr">
+                                                    <img src="/Games/mv/images/fegyver.png" class="playerTile" />
+                                                    <div class="playerTile-cnt">{{ player.fegyverek }}</div>
+                                                </div>
+                                                <div ng-repeat="mamut in player.mLapkak" class="playerTile-wr">
+                                                    <img src="/Games/mv/images/mamut.png" class="playerTile" />
+                                                    <div class="playerTile-cnt">{{ mamut.count }}</div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
                             </tr>
                         </table>
                         <div id="remove-babu-area"><a href="javascript:void(0)" data-remove-babu="1">Remove Babu</a></div>

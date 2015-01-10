@@ -335,6 +335,15 @@ $(function () {
                 $.each(p.ladak, function (l, lada) {
                     graphics.drawLada(lada, p.Szinkod);
                 });
+                var mo = [];
+                p.mamutok.sort();
+                p.mamutok.forEach(function (m) {
+                    var n = -1;
+                    $.each(mo, function (nn, mm) { if (mm.m == m) { n = nn; return false } });
+                    if (n == -1) mo.push({ m: m, count: 1 });
+                    else mo[n].count++;
+                });
+                p.mLapkak = mo;
             });
         }
         if (app.mvParty.tiles)

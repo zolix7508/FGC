@@ -39,7 +39,7 @@ mvApp.controller('boardController', ['$scope', 'mvDataService', function (scope,
         };
         scope.mehet = function () {
             app.szinMehet();
-        }
+        };
     }
     //scope.exData( mvDataService.getData());
 }]);

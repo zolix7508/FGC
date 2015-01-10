@@ -85,3 +85,7 @@ select option:hover {
 #error-text { color: red; }
 .error-area { display:none; }
 #remove-babu-area { height: 40px}
+
+.playerTile { width: 40px}
+.playerTile-wr { float: left }
+.playerTile-cnt { text-align:center; font-weight:bold }

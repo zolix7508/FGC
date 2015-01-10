@@ -91,8 +91,8 @@ namespace mvserver
                     resp.AddActionItem(ActionKind.DrawBabuk, babuk, oldIdx, players);
                     resp.AddActionItem(ActionKind.DrawBabuk, babuk, idx, players);
                     resp.AddActionItem(ActionKind.SelectBabu, this.selectedBabuId);
-                    if (tileLeft(oldIdx, SelectedBabu, out isolatedTiles)) ;
-                    processIfTeliTabor(idx, ref resp);
+                    tileLeft(oldIdx, SelectedBabu, out isolatedTiles);
+                    processIfTabor(idx, ref resp);
                     resp += nextMove();
                     resp.AddActionItem(ActionKind.FullStatus, this);
                 }
@@ -364,19 +364,20 @@ namespace mvserver
             return babuk.Any(babu => babu.playerIdx == playerIdx && babu.isOnMap());
         }
 
-
-        void processIfTeliTabor(int idx, ref mvResponse resp) {
-        if (phase == Phase.Nyar && teliTabor.IndexOf(idx) > -1) {
-            var tile = tiles[idx];
-            var currentPlayer = players[CurrentPlayerIdx];
-            if (currentPlayer.ladak.IndexOf(idx) == -1)
+        void processIfTabor(int idx, ref mvResponse resp)
+        {
+            if (phase == Phase.Nyar && teliTabor.IndexOf(idx) > -1
+            || phase == Phase.Tel && nyariTabor.IndexOf(idx) > -1)
             {
-                currentPlayer.ladak.Add(idx);
-                resp.AddActionItem(ActionKind.LadaDeployed, idx, currentPlayer.Szinkod);
+                var tile = tiles[idx];
+                var currentPlayer = players[CurrentPlayerIdx];
+                if (currentPlayer.ladak.IndexOf(idx) == -1)
+                {
+                    currentPlayer.ladak.Add(idx);
+                    resp.AddActionItem(ActionKind.LadaDeployed, idx, currentPlayer.Szinkod);
+                }
             }
         }
-    }
-
 
         mvResponse endPhase()
         {
