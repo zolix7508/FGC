@@ -70,15 +70,16 @@ select option:hover {
     border: 1px solid black;
 }
 
-#wrapper { float:left }
+#wrapper { float:left; padding-bottom:60px }
 
 #board {
     position: fixed;
     left: 990px;
+    top: 20px;
     min-width: 200px;
 }
 
-#msgBoard { height: 400px; overflow:scroll; }
+#msgBoard { height: 400px; overflow:scroll; padding-bottom:60px }
 
 #msgBoard div {
     border-top: solid 1px black;
