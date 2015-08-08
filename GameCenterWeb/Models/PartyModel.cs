@@ -34,6 +34,7 @@ namespace GameCenterWeb.Models
                 var player = DependencyInjection.Resolve<IPlayer>();
                 player.Id = uiPlayer.Id;
                 player.UserId = uiPlayer.UserId;
+                player.Nick = uiPlayer.Nick;
                 yield return player;
             }
         }

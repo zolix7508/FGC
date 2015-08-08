@@ -23,6 +23,7 @@
                         @Html.CheckBoxFor(m => m.Players[i].Selected)
                         @Html.HiddenFor(m=>m.Players[i].UserId)
                         @Html.HiddenFor(m => m.Players[i].Id)
+                        @Html.HiddenFor(m => m.Players[i].Nick)
                     </td>
                     <td>@(Model.Players[i].Nick)</td>
                 </tr>

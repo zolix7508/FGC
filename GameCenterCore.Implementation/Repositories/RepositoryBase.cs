@@ -58,6 +58,7 @@ namespace GameCenterCore.Implementation.Repositories
             catch (DbEntityValidationException ex)
             {
                 var errs = ex.EntityValidationErrors.ToArray();
+                throw;
             }
         }
 
