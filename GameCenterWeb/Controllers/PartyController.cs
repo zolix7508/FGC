@@ -35,6 +35,16 @@ namespace GameCenterWeb.Controllers
             }
         }
 
+        //IGameService _GameService;
+        //IGameService GameService
+        //{
+        //    get
+        //    {
+        //        if (_GameService == null) _GameService = Resolve<IGameService>();
+        //        return _GameService;
+        //    }
+        //}
+
         IAuthenticationService _AuthenticationService;
         IAuthenticationService AuthenticationService
         {

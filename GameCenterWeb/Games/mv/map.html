@@ -42,6 +42,11 @@
         </div>
         <div data-ng-app="mvApp">
             <div id="board" ng-controller="boardController">
+                <div>
+                    <!--<div class="board-babu"></div>-->
+                    <div ng-class="'board-babu babu2_'+szinkod(thisPlayer.Szinkod)"></div>
+                    <div class="board-name"> {{ thisPlayer.Nick }}</div>
+                </div>
                 <div>{{ currentPlayerStr() }}</div>
                 <div ng-switch="partyPhase">
                     <div ng-switch-when="1">
@@ -52,7 +57,10 @@
                                 <td>{{ connectionStatus(player.ClientStatus) }}</td>
                                 <td>
                                     <div ng-if="isThisClient(player.Id) && !player.szinMehet" class="animate-if">
-                                        <select id="ddSzin" ng-options="item as '' for item in szabadSzinek" ng-model="selectedSzin" ng-change="szinValasztas(selectedSzin)" ng-class="szin(selectedSzin.toString())"></select>
+                                        <select id="ddSzin" ng-model="selectedSzin" ng-change="szinValasztas(selectedSzin)">
+                                            <option ng-repeat="o in szabadSzinek" ng-selected="{{o==selectedSzin}}" ng-class="'board-babu babu2_'+szinkod(o)" value="{{o}}">
+                                            </option>
+                                        </select>
                                         <div>{{ selectedSzin }}</div>
                                         <input type="button" value="Mehet" ng-click="mehet()" />
                                     </div>
@@ -100,6 +108,7 @@
                 <div ng-include="'/Games/mv/results.html'"></div>
                 <div id="msgBoard"></div>
             </div>
+        </div>
         </div>
 </body>
 </html>

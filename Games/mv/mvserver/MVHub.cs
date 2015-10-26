@@ -77,6 +77,7 @@ namespace mvserver
             if (resp.StatusChanged)
             {
                 party = PartyService.GetById(user.PartyId);
+                if (resp.isGameFinished) party.StatusId = PartyStatus.Finished;
                 party.Data = Serialize.ToJson(mvp);
                 PartyService.Update(party);
             }

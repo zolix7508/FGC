@@ -21,11 +21,12 @@ namespace GameCenterCore.Implementation.Persistance
     
         public System.Guid Id { get; set; }
         public short StatusId { get; set; }
-        public System.Guid GameId { get; set; }
         public Nullable<System.DateTime> UpdatedDateUTC { get; set; }
         public string Version { get; set; }
         public string Data { get; set; }
+        public System.Guid GameId { get; set; }
     
         public virtual ICollection<PlayerDb> Players { get; set; }
+        public virtual GameDb Game { get; set; }
     }
 }

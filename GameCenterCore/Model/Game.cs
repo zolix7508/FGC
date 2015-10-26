@@ -5,10 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameCenterCore
+namespace GameCenterCore.Model
 {
-    public class Game : VersionableBase
+    public class Game : VersionableBase, IGame
     {
-       
+        public Guid Id { get; set; }
+        public string Name { get; set; }
     }
 }

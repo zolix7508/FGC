@@ -10,19 +10,25 @@
         <th>Start</th>
         <th>Game</th>
         <th>Inditotta</th>
+	<th>Legutóbbi aktivitás</th>
         <th>Allapot</th>
         <th></th>
+        <th>Resztvevok</th>
     </tr>
     @if (Model != null)
     {
-        foreach (var party in Model)
+        foreach (var party in Model.OrderByDescending(p=>p.UpdatedDateUtc))
         {
             <tr>
             <td></td>
-            <td>@party.GameId</td>
+            <td>@party.Game.Name</td>
             <td></td>
+	        <td>@party.UpdatedDateUtc</td>
             <td>@party.StatusId</td>
             <td>@if (party.StatusId == PartyStatus.Created) { @Html.ActionLink("Csatlakozas", "Join", "Party", new { partyId = party.Id }, null)  } </td>
+            <td>
+                @System.String.Join(", ", party.Players.Select(p => p.Nick))
+            </td>
             </tr>
         }
     }

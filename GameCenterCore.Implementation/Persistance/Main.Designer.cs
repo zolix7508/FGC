@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'D:\doc\forras\fgc\fgc\src\GameCenter\GameCenterCore.Implementation\Persistance\Main.edmx'. 
+﻿// T4 code generation is enabled for model 'D:\doc\Forras\fgc\src\GameCenter\GameCenterCore.Implementation\Persistance\Main.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.

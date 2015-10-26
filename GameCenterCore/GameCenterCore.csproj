@@ -63,6 +63,7 @@
   <ItemGroup>
     <Compile Include="Contracts\Entities\IPlayer.cs" />
     <Compile Include="Contracts\Entities\IUser.cs" />
+    <Compile Include="Contracts\Services\IGameService.cs" />
     <Compile Include="Contracts\Services\IPartyService.cs" />
     <Compile Include="Contracts\Services\IPlayerService.cs" />
     <Compile Include="Contracts\Services\IUserGroupService.cs" />

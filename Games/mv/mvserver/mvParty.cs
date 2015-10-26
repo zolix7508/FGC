@@ -427,7 +427,7 @@ namespace mvserver
 
         internal mvResponse endGame()
         {
-            var resp = new mvResponse();
+            var resp = new mvResponse() { isGameFinished = true };
             resp.AddActionItem(ActionKind.GameEnd, GetPlayerResults());
             return resp;
         }
@@ -552,7 +552,7 @@ namespace mvserver
             for (int i = 0; i < tiles.Count; i++)
             {
                 tiles[i].isolated = false;
-                if (tiles[i].tileKind == TileKind.Init) arr.Add(i);
+                if (tiles[i].tileKind == TileKind.Init || tiles[i].isRemovable()) arr.Add(i);
             }
 
             nyariKovek _nyariKovek;

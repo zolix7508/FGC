@@ -26,7 +26,7 @@ function Graphics() {
         }
     }
 
-	function getSzinkod (szinkod) {
+	self.getSzinkod = function(szinkod) {
 	    switch (szinkod) {
 	        case 1: return 'p';
 	        case 2: return 'k';
@@ -54,7 +54,7 @@ function Graphics() {
 	        var x = x0 + babuKorR * Math.cos(u);
 	        var y = y0 + babuKorR * Math.sin(u);
 	        var info = jatekosok[i + 1];
-	        var cls = 'babu_' + getSzinkod(jatekosok[i].Szinkod);
+	        var cls = 'babu_' + self.getSzinkod(jatekosok[i].Szinkod);
 	        info.babuk.forEach(function (babu) {
 	            var elem = $('[data-babu="' + babu.id + '"]', host);
 	            var isNew = !elem.length;
@@ -112,7 +112,7 @@ function Graphics() {
 	    var co = getTileCoords(tileIdx);
 	    var x = co.x - ladaRp2 + ladaKorR * Math.cos(u);
 	    var y = co.y - ladaRp2 + ladaKorR * Math.sin(u);
-	    var cls = 'lada_' + getSzinkod(szin);
+	    var cls = 'lada_' + self.getSzinkod(szin);
 	    var elem = self.ladaTemplate.clone().addClass(cls).css({ left: x, top: y });
 	    host.append(elem);
 	}

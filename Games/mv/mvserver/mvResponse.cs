@@ -50,6 +50,8 @@ namespace mvserver
             }
         }
 
+        public bool isGameFinished { get; set; }
+
         public static mvResponse operator +(mvResponse r1, mvResponse r2) {
             if (r1 == null) return r2;
             if (r2 == null) return r1;
@@ -60,6 +62,8 @@ namespace mvserver
         {
             foreach (var r in r2._items)
                 _items.Add(r);
+
+            isGameFinished = isGameFinished || r2.isGameFinished;
 
             return this;
         }

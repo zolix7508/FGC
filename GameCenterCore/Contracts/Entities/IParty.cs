@@ -10,7 +10,8 @@ namespace GameCenterCore.Contracts
     public enum PartyStatus : short
     {
         Created = 1,
-        Running = 2
+        Running = 2,
+        Finished = 3
     }
 
     public enum PartyPhase : byte
@@ -22,6 +23,7 @@ namespace GameCenterCore.Contracts
     public interface IParty
     {
         Guid GameId { get; set; }
+        IGame Game { get; set; }
         Guid Id { get; set; }
         bool IsRunning { get; }
         PartyStatus StatusId { get; set; }

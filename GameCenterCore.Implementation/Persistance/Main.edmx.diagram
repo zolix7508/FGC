@@ -16,6 +16,7 @@
         <EntityTypeShape EntityType="PersistanceModel.PlayerDb" Width="1.5" PointX="5.25" PointY="0.875" />
         <AssociationConnector Association="PersistanceModel.FK_PartyPlayer" />
         <AssociationConnector Association="PersistanceModel.FK_Players_Users" />
+        <AssociationConnector Association="PersistanceModel.FK_Parties_Games" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

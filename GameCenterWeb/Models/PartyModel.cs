@@ -4,13 +4,26 @@ using System.Linq;
 using System.Web;
 using GameCenterCore.Contracts;
 using Infrastructure.Core.DI;
+using GameCenterCore.Model;
 
 namespace GameCenterWeb.Models
 {
     public class PartyModel
     {
         public Guid Id { get; set; }
-        public Guid GameId { get; set; }
+
+        private IGame _game;
+        public IGame Game {
+            get
+            {
+                if (_game == null) _game = DependencyInjection.Resolve<IGame>();
+                return _game;
+            }
+            set
+            {
+                _game = value;
+            }
+        }
         public string Name { get; set; }
         public List<UIPlayerModel> Players { get; set; }
 
@@ -19,7 +32,7 @@ namespace GameCenterWeb.Models
         internal IParty ToParty()
         {
             IParty party = DependencyInjection.Resolve<IParty>();
-            party.GameId = this.GameId;
+            party.GameId = this.Game.Id;
             party.StatusId = PartyStatus.Created;
             party.Id = this.Id;
             if (this.Players != null)

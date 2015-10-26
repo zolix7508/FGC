@@ -1,9 +1,9 @@
-.babu_p, .babu_k, .babu_z, .babu_s { background-size: 100% 100%; width: 30px; height: 30px; position: absolute; cursor:pointer }
+.babu_p, .babu_k, .babu_z, .babu_s { background-size: 100% 100%; width: 30px; height: 30px; position: absolute; cursor:pointer; z-index:3 }
 .babu_p { background-image: url(images/babu_p.png); }
 .babu_k { background-image: url(images/babu_k.png); }
 .babu_z { background-image: url(images/babu_z.png); }
 .babu_s { background-image: url(images/babu_s.png); }
-.selectedBabu { background-image: url(images/babu_selected.png); background-size: 100% 100%; width: 30px; height: 30px; position: absolute; cursor:pointer; }
+.selectedBabu { background-image: url(images/babu_selected.png); background-size: 100% 100%; width: 30px; height: 30px; position: absolute; cursor:pointer; z-index:3}
 .babu-szam { text-align:center; position: relative; top: 50%; transform: translateY(-50%); -webkit-transform: translateY(-50%); -ms-transform: translateY(-50%);
   transform: translateY(-50%); }
 
@@ -70,13 +70,20 @@ select option:hover {
     border: 1px solid black;
 }
 
-#wrapper { float:left; padding-bottom:60px }
+#wrapper { float:left; padding-bottom:60px; position:relative; z-index:1 }
 
 #board {
-    position: fixed;
-    left: 990px;
+    /*position: fixed;*/
+    /*left: 990px;
+    min-width: 200px;*/ 
+    position:relative;
     top: 20px;
-    min-width: 200px;
+    left:10px;
+}
+
+table {
+    position: relative;
+    left: -4px;
 }
 
 #msgBoard { height: 400px; overflow:scroll; padding-bottom:60px }
@@ -95,3 +102,24 @@ select option:hover {
 
 .playerResultItem { float: left}
 .playerResultItem-img {width: 50px}
+
+.board-name
+{ 
+    position:relative;
+    left:20px;
+    padding-bottom:20px;
+    font-weight:bold;
+}
+
+.board-babu {
+    background-size: 100% 100%;
+    width: 30px;
+    height: 30px;
+    position: relative;
+    float:left
+}
+
+.babu2_p { background-image: url(images/babu_p.png); }
+.babu2_k { background-image: url(images/babu_k.png); }
+.babu2_z { background-image: url(images/babu_z.png); }
+.babu2_s { background-image: url(images/babu_s.png); }

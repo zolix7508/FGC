@@ -14,7 +14,14 @@ namespace GameCenterCore.Implementation.Persistance
     
     public partial class GameDb
     {
+        public GameDb()
+        {
+            this.Parties = new HashSet<PartyDb>();
+        }
+    
         public System.Guid Id { get; set; }
         public string Name { get; set; }
+    
+        public virtual ICollection<PartyDb> Parties { get; set; }
     }
 }

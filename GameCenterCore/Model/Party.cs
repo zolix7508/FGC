@@ -11,6 +11,7 @@ namespace GameCenterCore.Model
     {
         public Guid Id { get; set; }
         public Guid GameId { get; set; }
+        public IGame Game { get; set; }
         public string GameName { get; set; }
         public PartyStatus StatusId { get; set; }
         public string Status { get { return _status; } }
@@ -23,7 +24,7 @@ namespace GameCenterCore.Model
         public string Version { get; set; }
         public string Data { get; set; }
 
-        private PartyStatus _statusId = PartyStatus.Created;
+        //private PartyStatus _statusId = PartyStatus.Created;
         private string _status;
         private DateTime _createdDate;
     }

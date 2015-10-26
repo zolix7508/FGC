@@ -103,6 +103,7 @@
     <Compile Include="Repositories\RepositoryBase.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
     <Compile Include="Services\AuthenticationService.cs" />
+    <Compile Include="Services\GameService.cs" />
     <Compile Include="Services\PartyService.cs" />
     <Compile Include="Services\ServiceBase.cs" />
     <Compile Include="Services\PlayerService.cs" />

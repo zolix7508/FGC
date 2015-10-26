@@ -7,7 +7,8 @@
 <h2>Uj Party Letrehozasa</h2>
 @using (Html.BeginForm("Save","Party")) {
     @Html.HiddenFor(m=>m.Id)
-    <span>Jatek: </span>@Html.DropDownList("GameId", new List<SelectListItem> { new SelectListItem { Value = "85A9EB34-60EC-405B-98C6-5611D998318A", Text = "Mamutvadaszat" } }, "- Valassz -")
+    @Html.Hidden("Game.Name", "Mamutvadaszat")
+    <span>Jatek: </span>@Html.DropDownList("Game.Id", new List<SelectListItem> { new SelectListItem { Value = "85A9EB34-60EC-405B-98C6-5611D998318A", Text = "Mamutvadaszat" } }, "- Valassz -")
     <h3>Résztvevők</h3>
     <table>
         <tr>

@@ -7,6 +7,7 @@ var mvApp = angular.module('mvApp', ['mvDataServiceApp']);
 
 mvApp.controller('boardController', ['$scope', 'mvDataService', function (scope, mvDataService) {
     scope.szin = graphics.getSzinClass;
+    scope.szinkod = graphics.getSzinkod;
 
     scope.exData = function (d) {
         if (!d) return;
@@ -40,6 +41,7 @@ mvApp.controller('boardController', ['$scope', 'mvDataService', function (scope,
         scope.mehet = function () {
             app.szinMehet();
         };
+        scope.thisPlayer = d.jatekos;
     }
     //scope.exData( mvDataService.getData());
 }]);
